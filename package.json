@@ -1,0 +1,38 @@
+{
+  "name": "base-migrate",
+  "version": "1.0.0",
+  "description": "Tool for migrating ERC20 tokens to the base blockchain",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/njokuScript/base-migrate.git"
+  },
+  "keywords": [
+    "base",
+    "onchain",
+    "erc20",
+    "optimism"
+  ],
+  "author": "Njoku Emmanuel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/njokuScript/base-migrate/issues"
+  },
+  "homepage": "https://github.com/njokuScript/base-migrate#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "^1.1.1",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
+    "hardhat": "^2.22.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  }
+}
