@@ -1,4 +1,5 @@
 [profile.default]
+auto_detect_solc = true
 src = "src"
 out = "out"
 libs = ["lib"]
