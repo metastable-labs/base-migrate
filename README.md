@@ -1,66 +1,43 @@
-## Foundry
+# Base Migration Tool
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+The Base Migration Tool is a comprehensive solution designed for projects looking to migrate their ERC20 tokens to the Base blockchain. This tool simplifies the migration process, ensuring a smooth transition to Base, a highly scalable and developer-friendly blockchain. It automates critical steps, including the deployment of a canonical bridged ERC20 token to Base, managing pull requests for token metadata updates, and submitting metadata to prominent blockchain explorers and data aggregators.
 
-Foundry consists of:
+## Features
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- **Automated Deployment**: Automatically deploys a canonical bridged version of your ERC20 token to the Base blockchain, ensuring compatibility and seamless integration.
+- **Metadata Management**: Opens pull requests with updated token metadata to the Superchain token list repository, facilitating the visibility and recognition of your token within the ecosystem.
+- **Metadata Submission**: Submits your token's metadata to leading blockchain explorers and data aggregators such as Etherscan, Blockscout, and CoinGecko, enhancing your token's accessibility and credibility.
 
-## Documentation
+## Tasks
 
-https://book.getfoundry.sh/
+- [ ] **Token Contract Development**: Design and implement the smart contract for the token, ensuring it meets the ERC20 Base standard bridge contract
+- [ ] **Migrate from foundry to hardhat**
+- [ ] **Backend Deployment Services**: Develop backend APIs that facilitate the automated deployment of the token contract to the Base blockchain when called by the frontend
+- [ ] **Token Repository Integration**: Implement backend APIs that automate the process of creating and submitting pull requests to the Optimism token list repository.
+- [ ] **Metadata Distribution System**: Create backend services that automate the submission of the token's metadata to major blockchain explorers and data aggregators such as Etherscan, Blockscout, and CoinGecko.
+- [ ] **Implement Frontend app*
 
-## Usage
+## Getting Started [WIP]
 
-### Build
+### Prerequisites
 
-```shell
-$ forge build
-```
+- Node.js (version 14 or later)
+- npm (version 6 or later)
 
-### Test
+### Installation [WIP]
 
-```shell
-$ forge test
-```
+## Contributing
 
-### Format
+Contributions are welcome! If you have a feature request, bug report, or pull request, please feel free to contribute to the project.
 
-```shell
-$ forge fmt
-```
+## License
 
-### Gas Snapshots
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```shell
-$ forge snapshot
-```
+## Support
 
-### Anvil
+For support, please open an issue in the GitHub repository or contact the project maintainers directly.
 
-```shell
-$ anvil
-```
+## Acknowledgments
 
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+- Thanks to the Base and Ethereum communities for their invaluable resources and support.
