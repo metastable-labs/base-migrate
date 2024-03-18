@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "forge-std/Script.sol";
-import "../src/OptimismMintableERC20.sol";
+import "../contracts/OptimismMintableERC20.sol";
 
 contract DeployToken is Script {
     function run(
