@@ -14,12 +14,7 @@ import {Semver} from "./universal/Semver.sol";
  *         Designed to be backwards compatible with the older StandardL2ERC20 token which was only
  *         meant for use on L2.
  */
-contract OptimismMintableERC20 is
-    IOptimismMintableERC20,
-    ILegacyMintableERC20,
-    ERC20,
-    Semver
-{
+contract OptimismMintableERC20 is IOptimismMintableERC20, ILegacyMintableERC20, ERC20, Semver {
     /**
      * @notice Address of the corresponding version of this token on the remote chain.
      */
@@ -50,10 +45,7 @@ contract OptimismMintableERC20 is
      * @notice A modifier that only allows the bridge to call
      */
     modifier onlyBridge() {
-        require(
-            msg.sender == BRIDGE,
-            "OptimismMintableERC20: only bridge can mint and burn"
-        );
+        require(msg.sender == BRIDGE, "OptimismMintableERC20: only bridge can mint and burn");
         _;
     }
 
@@ -65,12 +57,10 @@ contract OptimismMintableERC20 is
      * @param _name        ERC20 name.
      * @param _symbol      ERC20 symbol.
      */
-    constructor(
-        address _bridge,
-        address _remoteToken,
-        string memory _name,
-        string memory _symbol
-    ) ERC20(_name, _symbol) Semver(1, 0, 0) {
+    constructor(address _bridge, address _remoteToken, string memory _name, string memory _symbol)
+        ERC20(_name, _symbol)
+        Semver(1, 0, 0)
+    {
         REMOTE_TOKEN = _remoteToken;
         BRIDGE = _bridge;
     }
@@ -81,10 +71,7 @@ contract OptimismMintableERC20 is
      * @param _to     Address to mint tokens to.
      * @param _amount Amount of tokens to mint.
      */
-    function mint(
-        address _to,
-        uint256 _amount
-    )
+    function mint(address _to, uint256 _amount)
         external
         virtual
         override(IOptimismMintableERC20, ILegacyMintableERC20)
@@ -100,10 +87,7 @@ contract OptimismMintableERC20 is
      * @param _from   Address to burn tokens from.
      * @param _amount Amount of tokens to burn.
      */
-    function burn(
-        address _from,
-        uint256 _amount
-    )
+    function burn(address _from, uint256 _amount)
         external
         virtual
         override(IOptimismMintableERC20, ILegacyMintableERC20)
@@ -120,18 +104,13 @@ contract OptimismMintableERC20 is
      *
      * @return Whether or not the interface is supported by this contract.
      */
-    function supportsInterface(
-        bytes4 _interfaceId
-    ) external pure returns (bool) {
+    function supportsInterface(bytes4 _interfaceId) external pure returns (bool) {
         bytes4 iface1 = type(IERC165).interfaceId;
         // Interface corresponding to the legacy L2StandardERC20.
         bytes4 iface2 = type(ILegacyMintableERC20).interfaceId;
         // Interface corresponding to the updated OptimismMintableERC20 (this contract).
         bytes4 iface3 = type(IOptimismMintableERC20).interfaceId;
-        return
-            _interfaceId == iface1 ||
-            _interfaceId == iface2 ||
-            _interfaceId == iface3;
+        return _interfaceId == iface1 || _interfaceId == iface2 || _interfaceId == iface3;
     }
 
     /**
