@@ -10,9 +10,8 @@ The Base Migration Tool is a comprehensive solution designed for projects lookin
 
 ## Tasks
 
-- [xn] **Token Contract Development**: Design and implement the smart contract for the token, ensuring it meets the ERC20 Base standard bridge contract
-- [ ] **Migrate from foundry to hardhat**
-- [ ] **Backend Deployment Services**: Develop backend APIs that facilitate the automated deployment of the token contract to the Base blockchain when called by the frontend
+- [x] **Token Contract Development**: Design and implement the smart contract for the token, ensuring it meets the ERC20 Base standard bridge contract
+- [x] **Migrate from foundry to hardhat**
 - [ ] **Token Repository Integration**: Implement backend APIs that automate the process of creating and submitting pull requests to the Optimism token list repository.
 - [ ] **Metadata Distribution System**: Create backend services that automate the submission of the token's metadata to major blockchain explorers and data aggregators such as Etherscan, Blockscout, and CoinGecko.
 - [ ] **Implement Frontend app**
