@@ -2,5 +2,14 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+test = "test"
+bytecode_hash = "none"
+cbor_metadata = false
+evm_version = "paris"
+optimizer = true
+optimizer_runs = 1_000_000
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+[fmt]
+number_underscore = "thousands"
