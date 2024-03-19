@@ -1,4 +1,4 @@
-export interface Button {
+export interface ButtonType {
   onClick?: () => void;
   text: string;
   type?: "button" | "submit" | "reset";

@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import classNames from "classnames";
 
-import { Button } from "./types";
+import { ButtonType } from "./types";
 
 const Button = ({
   onClick,
@@ -12,7 +12,7 @@ const Button = ({
   loading,
   icon,
   variant = "primary",
-}: Button) => {
+}: ButtonType) => {
   return (
     <motion.button
       onClick={onClick}

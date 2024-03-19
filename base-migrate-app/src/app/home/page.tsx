@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import ConnectWallet from "./connect-wallet";
 import ConnectGithub from "./connect-github";
 
-const MigratePage = () => {
+const HomePage = () => {
   const { connectModal } = useConnect();
   const { isConnected, isDisconnected, connector, address } = useAccount();
   return (
@@ -17,4 +17,4 @@ const MigratePage = () => {
   );
 };
 
-export default MigratePage;
+export default HomePage;

@@ -12,7 +12,7 @@ const ConnectGithub = () => {
           Connect Github
         </div>
         <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center">
-          The github account connected will be used to fork and create a pr on
+          The github account connected will be used to fork and create a pull request on
           the Superchain token list repo.
         </p>
         <Button
@@ -31,7 +31,7 @@ const ConnectGithub = () => {
               Connect Github
             </div>
             <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center">
-              The github account connected will be used to fork and create a pr
+              The github account connected will be used to fork and create a pull request
               on the Superchain token list repo.
             </p>
           </div>

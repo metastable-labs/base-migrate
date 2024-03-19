@@ -55,7 +55,7 @@ function Page() {
           on the superchain token list repo.
         </p>
         <Button
-          onClick={() => navigate.push("/migrate")}
+          onClick={() => navigate.push("/home")}
           text="Migrate to base"
         />
       </div>
