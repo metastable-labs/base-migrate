@@ -4,7 +4,7 @@ import React from "react";
 import { ethers } from "ethers";
 import ERC20Abi from "../abis/OptimismMintableERC20.json";
 import L2StandardBridge from "../abis/config/base.json";
-import Landing from "@/pages/landing";
+import Landing from "@/screens/landing";
 function Page() {
   // const [remoteToken, setRemoteToken] = React.useState("");
   // const [name, setName] = React.useState("");

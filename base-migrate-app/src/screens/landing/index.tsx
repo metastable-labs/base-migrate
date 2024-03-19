@@ -1,6 +1,9 @@
+"use client";
 import { Button } from "@/components";
+import useSystemFunctions from "@/hooks/useSystemFunctions";
 
 const Landing = () => {
+  const { navigate } = useSystemFunctions();
   return (
     <div className="min-h-[89vh] flex flex-col justify-between items-center pt-20 relative bg-white-100">
       <div className="flex flex-col items-center w-full z-20">
@@ -11,7 +14,10 @@ const Landing = () => {
           Automatically deploy canonical bridged ERC20 to base and Create a PR
           on the superchain token list repo.
         </p>
-        <Button onClick={() => null} text="Migrate to base" />
+        <Button
+          onClick={() => navigate.push("/migrate")}
+          text="Migrate to base"
+        />
       </div>
 
       <div className="absolute bottom-0 asset z-10" />

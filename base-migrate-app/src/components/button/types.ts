@@ -5,4 +5,5 @@ export interface Button {
   loading?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode;
+  variant?: "primary" | "secondary" | "tertiary";
 }

@@ -11,6 +11,7 @@ const Button = ({
   disabled,
   loading,
   icon,
+  variant = "primary",
 }: Button) => {
   return (
     <motion.button
@@ -19,9 +20,11 @@ const Button = ({
       whileTap={{ scale: 0.9 }}
       transition={{ ease: "backOut" }}
       className={classNames(
-        "h-10 lg:h-12 rounded-[92px] px-4 md:px-6 flex items-center justify-center text-white-50 text-sm lg:text-lg bg-blue-50 border-[1.28px] border-blue-100",
+        "h-10 lg:h-12 rounded-[92px] flex items-center justify-center text-white-50 text-sm lg:text-lg bg-blue-50 border-[1.28px] border-blue-100 gap-2",
         {
           "pointer-events-none": loading || disabled,
+          "px-4 md:px-6": variant === "primary",
+          "px-12 md:px-16": variant === "secondary",
         }
       )}
       disabled={disabled}
