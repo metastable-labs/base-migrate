@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal } from '@/components';
 import { GithubIcon, Logo, SmallGithubIcon } from '../../../public/icons';
 import Input from '@/components/input';
+import Link from 'next/link';
 
 const ConnectGithub = () => {
   const [open, setOpen] = useState(false);
@@ -43,6 +44,12 @@ const ConnectGithub = () => {
           </div>
           <div className="py-3 flex flex-col justify-center items-center">
             <Button variant="tertiary" text={'Continue'} />
+            <Link
+              href="https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+              target="_blank"
+              className="text-blue-50 underline justify-center pt-6">
+              Don’t know how to get your Github access token?
+            </Link>
           </div>
         </Modal>
       )}
