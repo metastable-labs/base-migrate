@@ -22,26 +22,35 @@ const Input = (props: InputType) => {
     
     const [valueText, setValue] = useState('');
 
-    const handleOnChange = (value: string) => {
+ const handleOnChange = (value: string) => {
+    if (value.length === 0) {
+        setValue('');
+        onChange && onChange('');
+        return;
+    }
 
-        if (value.length === 0 || Number(value) === 0) {
-            setValue('');
-            onChange && onChange('');
-            return;
-        }
+    // Check if the input is a valid number (without decimals)
+    const isNumberMatch = value.match(/^\d+$/);
 
-        // Check if the input is a valid number (without decimals)
-        const isMatch = value.match(/^\d+$/);
+    if (isNumberMatch && isNaN(Number(value))) return;
 
-        if (!isMatch) return;
+    // Check if the input is a valid Ethereum wallet address
+    const isAddressMatch = value.match(/^0x[a-fA-F0-9]{40}$/);
 
-        if (isNaN(Number(value))) return;
-
+    if (isNumberMatch || isAddressMatch) {
         setValue(value);
         onChange && onChange(value);
-    };
+        return;
+    }
+
+    // Allow any text input
+    setValue(value);
+    onChange && onChange(value);
+};
+
     return (
         <div>
+            
         </div>
  )
 

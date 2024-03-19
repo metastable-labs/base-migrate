@@ -1,9 +1,11 @@
-"use client";
+'use client';
+import React from 'react';
+import { useAccount } from 'wagmi';
 
-import useConnect from "@/hooks/useConnect";
-import { useAccount } from "wagmi";
-import ConnectWallet from "./connect-wallet";
-import ConnectGithub from "./connect-github";
+import useConnect from '@/hooks/useConnect';
+
+import ConnectWallet from './connect-wallet';
+import ConnectGithub from './connect-github';
 
 const HomePage = () => {
   const { connectModal } = useConnect();
