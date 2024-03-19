@@ -24,7 +24,7 @@ const Header = () => {
 
           {!isConnected || !address || isDisconnected ? (
             <Button
-              onClick={() => (pathname === '/' ? navigate.push('/migrate') : connectModal())}
+              onClick={() => (pathname === '/' ? navigate.push('/home') : connectModal())}
               text={pathname === '/' ? 'Migrate to base' : 'Connect wallet'}
             />
           ) : (
