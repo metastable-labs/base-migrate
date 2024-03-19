@@ -8,7 +8,6 @@ export interface InputType {
   valueAlt?: string;
   placeholder?: string;
   valid?: boolean;
-  max?: string;
   value?: string;
   onChange?: (val: string) => void;
   error?: string | React.ReactNode;
