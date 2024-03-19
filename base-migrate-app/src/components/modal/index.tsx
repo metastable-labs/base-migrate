@@ -24,6 +24,7 @@ const Modal = ({ close, children }: Modal) => {
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 50, opacity: 0 }}
+        onClick={close}
         className="z-10 absolute w-full h-full bg-black-100 bg-opacity-85 backdrop-blur-[0.8px]"
       />
       <motion.div
