@@ -48,7 +48,7 @@ const Input = (props: InputType) => {
           disabled={disabled}
           placeholder={placeholder}
           value={value || valueText}
-          className="justify-center w-full items-start self-stretch px-6 py-3.5 text-sm leading-5 bg-gray-50 rounded-lg border border-solid border-zinc-200 max-w-[504px] text-zinc-400 max-md:px-5"
+          className="justify-center text-black-250 w-full items-start self-stretch px-6 py-3.5 text-sm leading-5 bg-gray-50 rounded-lg border border-solid border-zinc-200 max-w-[504px] outline outline-blue-50 max-md:px-5"
           onChange={(e) => handleOnChange(e.target.value)}
         />
       </div>
