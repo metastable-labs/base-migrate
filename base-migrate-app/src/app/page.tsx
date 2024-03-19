@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ethers } from "ethers";
-import ERC20Abi from "../abis/OptimismMintableERC20.json";
-import L2StandardBridge from "../abis/config/base.json";
-import { Button } from "@/components";
-import useSystemFunctions from "@/hooks/useSystemFunctions";
+import React from 'react';
+// import { ethers } from "ethers";
+// import ERC20Abi from "../abis/OptimismMintableERC20.json";
+// import L2StandardBridge from "../abis/config/base.json";
+import { Button } from '@/components';
+import useSystemFunctions from '@/hooks/useSystemFunctions';
 
 function Page() {
   const { navigate } = useSystemFunctions();
@@ -51,13 +51,10 @@ function Page() {
           Migrate ERC20 tokens to Base Network
         </h1>
         <p className="text-black-150 text-sm lg:text-base pt-5 pb-7 text-center leading-5 md:max-w-[60%] xl:max-w-[32%] md:leading-[28px]">
-          Automatically deploy canonical bridged ERC20 to base and Create a PR
-          on the superchain token list repo.
+          Automatically deploy canonical bridged ERC20 to base and Create a PR on the superchain
+          token list repo.
         </p>
-        <Button
-          onClick={() => navigate.push("/migrate")}
-          text="Migrate to base"
-        />
+        <Button onClick={() => navigate.push('/home')} text="Migrate to base" />
       </div>
 
       <div className="absolute bottom-0 asset z-10" />
