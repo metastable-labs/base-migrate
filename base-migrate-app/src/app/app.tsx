@@ -1,8 +1,8 @@
-"use client";
-import { ReactNode } from "react";
+'use client';
+import React, { ReactNode } from 'react';
 
-import RainbowProvider from "@/config/rainbowkit";
-import { Header } from "@/components";
+import RainbowProvider from '@/config/rainbowkit';
+import { Header } from '@/components';
 
 const App = ({ children }: { children: ReactNode }) => {
   return (
