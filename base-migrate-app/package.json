@@ -1,5 +1,5 @@
 {
-  "name": "base-migrate-app",
+  "name": "@base-migrate/base-migrate-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
