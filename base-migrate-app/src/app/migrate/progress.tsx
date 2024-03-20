@@ -22,7 +22,7 @@ const steps = [
     time: '2:31am',
   },
   {
-    title: 'Adding token data to superchain repo',
+    title: 'Adding token data to the forked superchain repo',
     status: 'stale',
     time: '2:31am',
   },
