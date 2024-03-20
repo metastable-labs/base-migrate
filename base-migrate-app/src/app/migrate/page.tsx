@@ -5,6 +5,7 @@ import { Logo } from '../../../public/icons';
 import Input from '@/components/input';
 import { Button } from '@/components';
 import MigrationProgress from './progress';
+import classNames from 'classnames';
 
 function MigratePage() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -15,9 +16,17 @@ function MigratePage() {
 
   return (
     <div>
-      <StepHeader activeStep={activeStep} />
+      {activeStep < 2 && <StepHeader activeStep={activeStep} />}
       <div className="p-8 flex items-center justify-center">
-        <div className="flex-col border rounded-xl border-grey-200 bg-white-50 inline-flex w-[552px] h-auto p-6">
+        <div
+          className={classNames(
+            'flex-col border rounded-xl border-grey-200 bg-white-50 inline-flex w-full mx-2 md:mx-0 h-auto p-6',
+            {
+              'md:w-[552px]': activeStep !== 2,
+              'md:w-[448px]': activeStep === 2,
+              'mt-20': activeStep > 1,
+            },
+          )}>
           <div className="flex justify-center pb-6">
             <Logo />
           </div>
@@ -104,7 +113,26 @@ function MigratePage() {
             </>
           )}
 
-          {activeStep === 2 && <MigrationProgress />}
+          {activeStep === 2 && <MigrationProgress next={nextStep} />}
+
+          {activeStep === 3 && (
+            <div>
+              <div className="md:text-lg text-black-250 text-center font-medium">
+                You’re almost Based
+              </div>
+              <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center mt-4 px-6 md:px-20">
+                To complete the migration, submit a pull request to the Superchain token repo list.
+              </p>
+              <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center mt-4 px-6 md:px-20">
+                Once your PR is merged, the token list will update automatically to include your
+                token and your token will be available on the Base Bridge.
+              </p>
+
+              <div className="py-7 flex flex-col justify-center items-center">
+                <Button onClick={() => {}} variant="tertiary" text={'Raise PR'} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

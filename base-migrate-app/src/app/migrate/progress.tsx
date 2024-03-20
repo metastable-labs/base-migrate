@@ -31,13 +31,12 @@ const steps = [
     time: '2:31am',
   },
 ];
-const MigrationProgress = () => {
+const MigrationProgress = ({ next }: { next: () => void }) => {
   const [data, setData] = useState(steps);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
     setTimeout(() => {
-      if (step === 5) return;
       const newData = [...data];
 
       newData[step].status = 'completed';
@@ -48,14 +47,16 @@ const MigrationProgress = () => {
       setData([...newData]);
 
       setStep(step + 1);
-    }, 3000);
+
+      if (step + 1 === 4) next();
+    }, 2500);
   }, [step]);
 
   return (
     <div className="flex flex-col gap-2">
       {data.map((item, index) => (
         <div key={index}>
-          <div className="flex items-center justify-between bg-black-400 h-9 lg:h-10 rounded-[10px] p-2">
+          <div className="flex items-center justify-between bg-black-400 min-h-9 lg:min-h-10 rounded-[10px] p-2">
             <div className="flex items-center gap-3">
               <div
                 className={classNames(
@@ -70,7 +71,7 @@ const MigrationProgress = () => {
                 {item.status === 'completed' ? <GoodIcon /> : <div>{index + 1}</div>}
               </div>
               <div
-                className={classNames('text-xs md:text-sm transition-all', {
+                className={classNames('text-xs md:text-sm transition-all max-w-[85%]', {
                   'text-grey-50 font-medium': item.status === 'pending',
                   'text-grey-100': item.status !== 'pending',
                 })}>

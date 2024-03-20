@@ -1,4 +1,5 @@
 import Logo from './logo.svg';
+import SmallLogo from './small-logo.svg';
 import ConnectIcon from './connect-icon.svg';
 import GithubIcon from './github.svg';
 import SmallGithubIcon from './small-github.svg';
@@ -13,6 +14,7 @@ import LineIcon from './line.svg';
 
 export {
   Logo,
+  SmallLogo,
   ConnectIcon,
   GithubIcon,
   SmallGithubIcon,
