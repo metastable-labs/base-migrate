@@ -3,25 +3,27 @@ pragma solidity ^0.8.20;
 
 import "forge-std/Script.sol";
 import "../contracts/OptimismMintableERC20.sol";
+import {Script, stdJson, console2} from "forge-std/Script.sol";
 
-contract DeployToken is Script {
+contract DeployScript is Script {
+    using stdJson for string;
+
     function run(
         address _remoteToken,
         string memory _name,
         string memory _symbol
-    ) external broadcast {
-        vm.startBroadcast();
+    ) external {
         string memory deployConfigJson = getDeployConfigJson();
 
-        address _bridge = deployConfigJson.readUint(".L2StandardBridge");
+        ERC20 _bridge = ERC20(
+            deployConfigJson.readAddress(".L2StandardBridge")
+        );
         OptimismMintableERC20 opTokenContract = new OptimismMintableERC20(
-            _bridge,
+            address(_bridge),
             _remoteToken,
             _name,
             _symbol
         );
-
-        vm.stopBroadcast();
     }
 
     function getDeployConfigJson() internal view returns (string memory json) {
