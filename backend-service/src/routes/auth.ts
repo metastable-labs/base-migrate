@@ -4,7 +4,7 @@ import { authControllerInstance } from '../controllers/auth';
 const router = Router();
 
 router.get(
-  '/github/callback',
+  '/github',
   authControllerInstance.githubCallback.bind(authControllerInstance)
 );
 
