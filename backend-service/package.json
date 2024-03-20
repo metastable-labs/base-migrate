@@ -1,5 +1,5 @@
 {
-  "name": "typescript-typeorm-boilerlate",
+  "name": "@base-migrate/backend-service",
   "version": "1.0.0",
   "main": "dist/src/main.js",
   "author": "iamnotstatic",

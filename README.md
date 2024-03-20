@@ -16,14 +16,31 @@ The Base Migration Tool is a comprehensive solution designed for projects lookin
 - [ ] **Metadata Distribution System**: Create backend services that automate the submission of the token's metadata to major blockchain explorers and data aggregators such as Etherscan, Blockscout, and CoinGecko.
 - [ ] **Implement Frontend app**
 
-## Getting Started [WIP]
+## Getting started
 
-### Prerequisites
+### The code
 
-- Node.js (version 14 or later)
-- npm (version 6 or later)
+Base-Migrate uses a monorepo which includes all the services and applications we develop.
 
-### Installation [WIP]
+```
+# get the code
+git clone https://github.com/njokuScript/base-migrate
+cd base-migrate
+```
+You'll need [yarn](https://yarnpkg.com) installed globally.
+
+```
+yarn
+# install all dependencies
+```
+
+Build all packages:
+
+```
+yarn build
+```
+
+To execute commands inside the repo, we use the pattern `yarn workspace <workspace name> <command>`
 
 ## Contributing
 
