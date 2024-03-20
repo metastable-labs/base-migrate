@@ -1,3 +1,4 @@
+import React from 'react';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -21,7 +22,7 @@ const steps = [
     time: '2:31am',
   },
   {
-    title: 'Adding data to superchain repo',
+    title: 'Adding token data to the forked superchain repo',
     status: 'stale',
     time: '2:31am',
   },

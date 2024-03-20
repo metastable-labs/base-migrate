@@ -1,11 +1,10 @@
 import React from 'react';
-import { useAccount } from 'wagmi';
 import { motion } from 'framer-motion';
 
 import classNames from 'classnames';
-import { ClickAnimation } from './types';
+import { ClickAnimationType } from './types';
 
-const ClickAnimation = ({ children, onClick, classes }: ClickAnimation) => {
+const ClickAnimation = ({ children, onClick, classes }: ClickAnimationType) => {
   return (
     <motion.div
       onClick={onClick}

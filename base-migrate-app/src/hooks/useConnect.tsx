@@ -1,9 +1,9 @@
-import { removeLocalStorage } from "@/app/utils/storage";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { useAccount, useSwitchChain } from "wagmi";
-import { getAccount } from "@wagmi/core";
-import { wagmiConfig } from "@/config/rainbowkit";
-import { useEffect } from "react";
+import { removeLocalStorage } from '@/app/utils/storage';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useAccount, useSwitchChain } from 'wagmi';
+import { getAccount } from '@wagmi/core';
+import { wagmiConfig } from '@/config/rainbowkit';
+import { useEffect } from 'react';
 
 const useConnect = () => {
   const { openConnectModal } = useConnectModal();
@@ -13,7 +13,7 @@ const useConnect = () => {
 
   const connectModal = () => {
     if (isConnected) {
-      removeLocalStorage("@descentWalletDisconnected");
+      removeLocalStorage('@descentWalletDisconnected');
       return;
     }
 
@@ -22,21 +22,16 @@ const useConnect = () => {
 
   const listener = () => {
     if (chainId) {
-      const isAcceptedChain = wagmiConfig.chains.find(
-        (chain) => chain.id === chainId
-      );
+      const isAcceptedChain = wagmiConfig.chains.find((chain) => chain.id === chainId);
 
       if (isConnected && !isAcceptedChain) {
-        return (
-          switchChain && switchChain({ chainId: wagmiConfig.chains[0].id })
-        );
+        return switchChain && switchChain({ chainId: wagmiConfig.chains[0].id });
       }
     }
   };
 
   useEffect(() => {
     listener();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId, isConnected, isDisconnected, connector, address]);
 
   return {

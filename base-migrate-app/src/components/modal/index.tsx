@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
-import { Modal } from './types';
+import { ModalType } from './types';
 
-const Modal = ({ close, children }: Modal) => {
+const Modal = ({ close, children }: ModalType) => {
   useEffect(() => {
     // Add no-scroll class to body when the modal opens
     document.body.classList.add('no-scroll');
