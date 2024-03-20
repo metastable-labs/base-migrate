@@ -4,6 +4,7 @@ import StepHeader from './step-header';
 import { Logo } from '../../../public/icons';
 import Input from '@/components/input';
 import { Button } from '@/components';
+import MigrationProgress from './progress';
 
 function MigratePage() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -69,6 +70,7 @@ function MigratePage() {
               </div>
             </>
           )}
+
           {activeStep === 1 && (
             <>
               <div>
@@ -97,10 +99,12 @@ function MigratePage() {
               </div>
 
               <div className="py-6 flex flex-col justify-center items-center">
-                <Button onClick={() => {}} variant="tertiary" text={'Migrate to Base'} />
+                <Button onClick={nextStep} variant="tertiary" text={'Migrate to Base'} />
               </div>
             </>
           )}
+
+          {activeStep === 2 && <MigrationProgress />}
         </div>
       </div>
     </div>
