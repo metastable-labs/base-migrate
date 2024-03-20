@@ -6,7 +6,28 @@ export interface Token {
   website?: string;
   twitter?: string;
   tokens: {
-    [key: string]: {
+    ethereum?: {
+      address: string;
+    };
+    optimism?: {
+      address: string;
+    };
+    sepolia?: {
+      address: string;
+    };
+    'optimism-sepolia'?: {
+      address: string;
+    };
+    base?: {
+      address: string;
+    };
+    'base-sepolia'?: {
+      address: string;
+    };
+    mode?: {
+      address: string;
+    };
+    pgn?: {
       address: string;
     };
   };
