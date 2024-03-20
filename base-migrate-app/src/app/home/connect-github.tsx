@@ -3,8 +3,10 @@ import { Button, Modal } from '@/components';
 import { GithubIcon, Logo, SmallGithubIcon } from '../../../public/icons';
 import Input from '@/components/input';
 import Link from 'next/link';
+import useSystemFunctions from '@/hooks/useSystemFunctions';
 
 const ConnectGithub = () => {
+  const { navigate } = useSystemFunctions();
   const [open, setOpen] = useState(false);
   const [token, setToken] = useState('');
   return (
@@ -43,7 +45,11 @@ const ConnectGithub = () => {
             />
           </div>
           <div className="py-3 flex flex-col justify-center items-center">
-            <Button variant="tertiary" text={'Continue'} />
+            <Button
+              onClick={() => navigate.push('/migrate')}
+              variant="tertiary"
+              text={'Continue'}
+            />
             <Link
               href="https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
               target="_blank"
