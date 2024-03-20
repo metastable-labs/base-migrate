@@ -118,7 +118,7 @@ function MigratePage() {
           {activeStep === 3 && (
             <div>
               <div className="md:text-lg text-black-250 text-center font-medium">
-                You’re almost Based
+                You’re almost Based 🔵
               </div>
               <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center mt-4 px-6 md:px-20">
                 To complete the migration, submit a pull request to the Superchain token repo list.
@@ -129,7 +129,7 @@ function MigratePage() {
               </p>
 
               <div className="py-7 flex flex-col justify-center items-center">
-                <Button onClick={() => {}} variant="tertiary" text={'Raise PR'} />
+                <Button onClick={() => {}} variant="tertiary" text={'Raise Pull Request'} />
               </div>
             </div>
           )}

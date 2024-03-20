@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { Button, Modal } from '@/components';
 import { GithubIcon, Logo, SmallGithubIcon } from '../../../public/icons';
