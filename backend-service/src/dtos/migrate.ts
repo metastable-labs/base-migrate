@@ -12,9 +12,9 @@ import { Token } from '../common/interfaces/index.interface';
 export class MigrateTokenDto {
   @IsNotEmpty()
   @IsUrl()
-  logoUrl?: string;
+  logoUrl: string;
 
   @IsNotEmpty()
-  @IsObject()
+  @IsObject({ each: true })
   tokenData: Token;
 }
