@@ -1,9 +1,13 @@
 import { Octokit } from '@octokit/core';
 import axios from 'axios';
+import { ethers } from 'ethers';
 import { MigrateTokenDto } from '../dtos/migrate';
 
 import { env } from '../common/config/env';
 import { Token } from '../common/interfaces/index.interface';
+import { CHAIN_ID } from '../common/enums';
+import { L2_STANDARD_BRIDGE_ADDRESS } from '../common/constants';
+import { verifyContract } from '../common/helpers/etherscan';
 
 export class MigrateService {
   async migrateToken(body: MigrateTokenDto, accessToken: string) {
@@ -18,6 +22,13 @@ export class MigrateService {
     await this.addToken(octokit, owner, repo, body.tokenData, logoUrl);
 
     const pullRequestUrl = `${env.github.url}/${env.chain.username}/${repo}/compare/master...${owner}:${repo}:master`;
+
+    await this.etherscanVerify(
+      body.chainId,
+      body.tokenData.tokens.base.address,
+      body.tokenData.name,
+      body.tokenData.symbol
+    );
 
     return {
       pullRequestUrl,
@@ -70,23 +81,16 @@ export class MigrateService {
     title: string,
     body: string
   ) {
-    try {
-      const response = await octokit.request(
-        'POST /repos/{owner}/{repo}/pulls',
-        {
-          owner: forkOwner,
-          repo,
-          title,
-          body,
-          head,
-          base,
-        }
-      );
+    const response = await octokit.request('POST /repos/{owner}/{repo}/pulls', {
+      owner: forkOwner,
+      repo,
+      title,
+      body,
+      head,
+      base,
+    });
 
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    return response.data;
   }
 
   async createOrUpdateFile(
@@ -97,27 +101,23 @@ export class MigrateService {
     content: string,
     message: string
   ) {
-    try {
-      const res = await this.getFileSHA(octokit, owner, repo, path);
-      if (res) {
-        return;
-      }
-
-      const response = await octokit.request(
-        'PUT /repos/{owner}/{repo}/contents/{path}',
-        {
-          owner,
-          repo,
-          path,
-          message,
-          content,
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      throw error;
+    const res = await this.getFileSHA(octokit, owner, repo, path);
+    if (res) {
+      return;
     }
+
+    const response = await octokit.request(
+      'PUT /repos/{owner}/{repo}/contents/{path}',
+      {
+        owner,
+        repo,
+        path,
+        message,
+        content,
+      }
+    );
+
+    return response.data;
   }
 
   async addToken(
@@ -183,5 +183,43 @@ export class MigrateService {
     } catch (error) {
       return null;
     }
+  }
+
+  async etherscanVerify(
+    chainId: CHAIN_ID,
+    baseTokenAddress: string,
+    name: string,
+    symbol: string
+  ) {
+    if (CHAIN_ID.BASE_SEPOLIA === chainId) {
+      return;
+    }
+
+    const encodedParams = this.encodeContructParams(
+      L2_STANDARD_BRIDGE_ADDRESS,
+      baseTokenAddress,
+      name,
+      symbol
+    );
+
+    const response = await verifyContract(
+      baseTokenAddress,
+      chainId,
+      encodedParams
+    );
+
+    return response;
+  }
+
+  encodeContructParams(
+    bridgeAddress: string,
+    tokenAddress: string,
+    tokenName: string,
+    tokenSymbol: string
+  ) {
+    const abi = new ethers.AbiCoder();
+    const args = [bridgeAddress, tokenAddress, tokenName, tokenSymbol];
+
+    return abi.encode(['address', 'address', 'string', 'string'], args);
   }
 }

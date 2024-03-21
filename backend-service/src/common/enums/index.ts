@@ -1,0 +1,4 @@
+export enum CHAIN_ID {
+    BASE_MAINNET = 8453,
+    BASE_SEPOLIA = 84532,
+}
