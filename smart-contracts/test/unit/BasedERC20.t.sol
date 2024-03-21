@@ -81,7 +81,7 @@ contract BasedERC20Test is BasedERC20Base {
     function test_fuzz_mintFromBridge(address to, uint256 amount) public initializeBasedERC20 {
         // prepare args
         // ERC20 natively will nevert mint tokens to address(0);
-        vm.assume(to!=address(0));
+        vm.assume(to != address(0));
 
         // can mint
         vm.prank(bridge);
@@ -123,10 +123,13 @@ contract BasedERC20Test is BasedERC20Base {
         assertEq(clone.totalSupply(), 0);
     }
 
-    function test_fuzz_burnFromBridge(address from, uint256 mintAmount, uint256 burnAmount) public initializeBasedERC20 {
+    function test_fuzz_burnFromBridge(address from, uint256 mintAmount, uint256 burnAmount)
+        public
+        initializeBasedERC20
+    {
         // prepare args
         // ERC20 natively will nevert mint tokens to address(0);
-        vm.assume(from!=address(0));
+        vm.assume(from != address(0));
         burnAmount = bound(burnAmount, 0, mintAmount);
 
         // first mint
@@ -180,4 +183,4 @@ contract BasedERC20Test is BasedERC20Base {
         // invalid interface ids
         assertEq(clone.supportsInterface(type(IERC721).interfaceId), false);
     }
-} 
+}
