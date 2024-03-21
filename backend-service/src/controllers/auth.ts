@@ -4,20 +4,52 @@ import { Request, Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  async githubCallback(req: Request, res: Response) {
+  async githubAuth(req: Request, res: Response) {
     try {
-      const response = await this.authService.githubCallback(
-        req.query.code as string
-      );
+      const code = req.query.code as string;
 
-      res.status(200).json({
+      if (!code) {
+        return res.status(400).json({
+          message: 'Code not found',
+          statusCode: 400,
+        });
+      }
+
+      const response = await this.authService.githubAuth(code);
+
+      return res.status(200).json({
         message: 'Authenticated successfully',
         data: response,
       });
     } catch (error) {
-      res.status(error.code).json({
+      return res.status(error.status).json({
         message: error.message,
-        statusCode: error.code,
+        statusCode: error.status,
+      });
+    }
+  }
+
+  async getSession(req: Request, res: Response) {
+    try {
+      const accessToken = req.headers.authorization;
+
+      if (!accessToken) {
+        return res.status(401).json({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+      }
+
+      const response = await this.authService.getSession(accessToken);
+
+      return res.status(200).json({
+        message: 'Session retrieved successfully',
+        data: response,
+      });
+    } catch (error) {
+      return res.status(error.status).json({
+        message: error.message,
+        statusCode: error.status,
       });
     }
   }

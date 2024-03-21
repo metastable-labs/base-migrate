@@ -3,7 +3,7 @@ import axios from 'axios';
 import { env } from '../common/config/env';
 
 export class AuthService {
-  async githubCallback(code: string) {
+  async githubAuth(code: string) {
     const response = await axios.post(
       `${env.github.url}/login/oauth/access_token`,
       {
@@ -18,9 +18,33 @@ export class AuthService {
       }
     );
 
-    const { access_token } = response.data;
+    const {
+      access_token,
+      expires_in,
+      refresh_token,
+      refresh_token_expires_in,
+    } = response.data;
 
     const octokit = new Octokit({ auth: access_token });
+
+    const userInfo = await octokit.request('GET /user');
+
+    return {
+      accessToken: access_token,
+      expiresIn: expires_in,
+      refreshToken: refresh_token,
+      refreshTokenExpiresIn: refresh_token_expires_in,
+      user: {
+        name: userInfo.data.name,
+        username: userInfo.data.login,
+        avatar: userInfo.data.avatar_url,
+        profile: userInfo.data.html_url,
+      },
+    };
+  }
+
+  async getSession(accessToken: string) {
+    const octokit = new Octokit({ auth: accessToken });
 
     const userInfo = await octokit.request('GET /user');
 
@@ -29,7 +53,6 @@ export class AuthService {
       username: userInfo.data.login,
       avatar: userInfo.data.avatar_url,
       profile: userInfo.data.html_url,
-      accessToken: access_token,
     };
   }
 }
