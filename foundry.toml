@@ -14,3 +14,9 @@ optimizer_runs = 1_000_000
 
 [fmt]
 number_underscore = "thousands"
+
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
+
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}" }
