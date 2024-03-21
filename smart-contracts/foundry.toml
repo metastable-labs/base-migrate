@@ -11,8 +11,8 @@ optimizer = true
 optimizer_runs = 1_000_000
 
 [etherscan]
-baseSepolia = {key = "$BASESCAN_API_KEY", url = "https://api-sepolia.basescan.org/api"}
-base = {key = "$BASESCAN_API_KEY", url = "https://api.basescan.org/api"}
+base-sepolia = {key = "$ETHERSCAN_API_KEY", url = "https://api-sepolia.basescan.org/api"}
+base = {key = "$ETHERSCAN_API_KEY", url = "https://api.basescan.org/api"}
 mainnet = {key = "$ETHERSCAN_API_KEY"}
 sepolia = {key = "$ETHERSCAN_API_KEY"}
 
