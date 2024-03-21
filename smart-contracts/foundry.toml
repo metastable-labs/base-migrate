@@ -10,6 +10,12 @@ evm_version = "paris"
 optimizer = true
 optimizer_runs = 1_000_000
 
+[etherscan]
+baseSepolia = {key = "$BASESCAN_API_KEY", url = "https://api-sepolia.basescan.org/api"}
+base = {key = "$BASESCAN_API_KEY", url = "https://api.basescan.org/api"}
+mainnet = {key = "$ETHERSCAN_API_KEY"}
+sepolia = {key = "$ETHERSCAN_API_KEY"}
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
 [fmt]
