@@ -2,33 +2,25 @@
 pragma solidity ^0.8.20;
 
 import "forge-std/Script.sol";
-import "../src/OptimismMintableERC20.sol";
-import {Script, stdJson, console2} from "forge-std/Script.sol";
+import "../src/BasedMigrateERC20.sol";
+import "../src/factory/BasedERC20Factory.sol";
+import {Script} from "forge-std/Script.sol";
 
 contract DeployScript is Script {
-    using stdJson for string;
+    function run() external returns (address implementation, address factory) {
+        // get pvt key from env file, log associated address
+        uint256 privateKey = vm.envUint("PRIVATE_KEY");
+        address L2BridgeAddress = vm.envAddress("L2_BRIDGE_ADDRESS");
 
-    function run(
-        address _remoteToken,
-        string memory _name,
-        string memory _symbol
-    ) external {
-        string memory deployConfigJson = getDeployConfigJson();
+        vm.startBroadcast(privateKey);
+        // deploy implementation
+        implementation = address(new BasedMigrateERC20());
 
-        ERC20 _bridge = ERC20(
-            deployConfigJson.readAddress(".L2StandardBridge")
-        );
-        OptimismMintableERC20 opTokenContract = new OptimismMintableERC20(
-            address(_bridge),
-            _remoteToken,
-            _name,
-            _symbol
-        );
-    }
+        // deploy factory
+        factory = address(new BasedERC20Factory(address(implementation), L2BridgeAddress));
 
-    function getDeployConfigJson() internal view returns (string memory json) {
-        json = vm.readFile(
-            string.concat(vm.projectRoot(), "/deployConfigs/base.json")
-        );
+        vm.stopBroadcast();
+
+        return (implementation, factory);
     }
 }
