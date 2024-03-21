@@ -1,6 +1,10 @@
-name: test
+name: Test Smart Contracts
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
   FOUNDRY_PROFILE: ci
@@ -24,11 +28,11 @@ jobs:
 
       - name: Run Forge build
         run: |
-          forge --version
-          forge build --sizes
+          cd smart-contracts && forge --version
+          cd smart-contracts && forge build --sizes
         id: build
 
       - name: Run Forge tests
         run: |
-          forge test -vvv
+          cd smart-contracts &&  forge test -vvv
         id: test
