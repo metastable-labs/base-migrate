@@ -3,4 +3,3 @@ const MigrateFactory: any = {
 };
 
 export default MigrateFactory;
-
