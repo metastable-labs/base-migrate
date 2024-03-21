@@ -5,7 +5,12 @@ const router = Router();
 
 router.get(
   '/github',
-  authControllerInstance.githubCallback.bind(authControllerInstance)
+  authControllerInstance.githubAuth.bind(authControllerInstance)
+);
+
+router.get(
+  '/session',
+  authControllerInstance.getSession.bind(authControllerInstance)
 );
 
 export default router;
