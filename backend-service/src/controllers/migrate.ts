@@ -10,28 +10,35 @@ export class MigrateController {
 
   async migrateToken(req: Request, res: Response) {
     try {
+      const accessToken = req.headers.authorization;
+
+      if (!accessToken) {
+        return res.status(401).json({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+      }
+
       const migrateDto = plainToInstance(MigrateTokenDto, req.body);
       const errors = await validate(migrateDto);
 
       if (errors.length > 0) {
-        res.status(400).json({ errors });
+        return res.status(400).json({ errors });
       }
-
-      const accessToken = req.headers.authorization;
 
       const response = await this.migrateService.migrateToken(
         req.body,
         accessToken
       );
 
-      res.status(200).json({
+      return res.status(200).json({
         message: 'Migrated successfully',
         data: response,
       });
     } catch (error) {
-      res.status(error.code).json({
+      return res.status(error.status).json({
         message: error.message,
-        statusCode: error.code,
+        statusCode: error.status,
       });
     }
   }
