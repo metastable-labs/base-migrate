@@ -53,6 +53,7 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
     /**
      * @dev Reverts if the caller is not the StandardBridge contract.
      */
+
     error OnlyBridgeAllowed();
 
     /**

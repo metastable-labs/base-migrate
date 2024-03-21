@@ -58,8 +58,8 @@ contract BasedERC20Factory {
      * @param _bridge Address of the StandardBridge.
      */
     constructor(address _implementation, address _bridge) {
-        if(_bridge == address(0)) revert BridgeAddressCannotBeZero();
-        if(_implementation == address(0)) revert ImplementationCannotBeNull();
+        if (_bridge == address(0)) revert BridgeAddressCannotBeZero();
+        if (_implementation == address(0)) revert ImplementationCannotBeNull();
         basedMigrateErc20 = _implementation;
         BRIDGE = _bridge;
     }
@@ -71,8 +71,8 @@ contract BasedERC20Factory {
      * @param _symbol Symbol for the new token.
      * @return Address of the newly deployed BasedMigrateERC20 token.
      */
-    function beBased(address _remoteToken, string memory _name, string memory _symbol) external returns(address) {
-        if(_remoteToken == address(0)) {
+    function beBased(address _remoteToken, string memory _name, string memory _symbol) external returns (address) {
+        if (_remoteToken == address(0)) {
             revert RemoteTokenCannotBeZeroAddress();
         }
         // deploy clone
