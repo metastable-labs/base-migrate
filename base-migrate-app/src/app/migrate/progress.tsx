@@ -30,7 +30,7 @@ const steps = [
     time: '',
   },
   {
-    title: 'Raising PR on the superchain repo',
+    title: 'Preparing PR on the superchain repo',
     status: 'stale',
     time: '',
   },
@@ -77,7 +77,7 @@ const MigrationProgress = ({
   }, [step, isPending]);
 
   useEffect(() => {
-    if (isConfirmed && step < 2) {
+    if (isConfirmed && !isPending && step < 2) {
       setTimeout(() => {
         setStep(step + 1);
       }, 2000);
