@@ -17,8 +17,7 @@
     "bump": "yarn packages:version patch && yarn version:apply",
     "release": "yarn build && yarn bump && yarn packages:publish",
     "lint": "yarn packages --parallel run lint",
-    "lint:contracts": "yarn workspace @base-migrate/contracts forge fmt",
-    "postinstall": "husky install"
+    "lint:contracts": "yarn workspace @base-migrate/contracts forge fmt"
   },
   "repository": {
     "type": "git",

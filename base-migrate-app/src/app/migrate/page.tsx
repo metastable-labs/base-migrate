@@ -1,19 +1,55 @@
 'use client';
 import React from 'react';
+import classNames from 'classnames';
+
 import StepHeader from './step-header';
 import { Logo } from '../../../public/icons';
 import Input from '@/components/input';
 import { Button } from '@/components';
 import MigrationProgress from './progress';
-import classNames from 'classnames';
+import useContract from '@/hooks/useContract';
 
 function MigratePage() {
+  const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
   const [activeStep, setActiveStep] = React.useState(0);
+  const [formData, setFormData] = React.useState({
+    token_name: '',
+    token_symbol: '',
+    token_decimal: '',
+    token_description: '',
+    token_address: '',
+    logo: '',
+    website: '',
+    twitter: '',
+  });
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+
+    setFormData((prevFormData: any) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
   const nextStep = () => {
     setActiveStep((prev) => prev + 1);
   };
 
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    deployToken(formData.token_address, formData.token_name, formData.token_symbol);
+  };
+  console.log(isConfirmed, isPending);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const data = await getTransactionData();
+      console.log(data, 'tx data');
+      console.log('deployed token on base:', data?.logs[0].address);
+    };
+    fetchData();
+  }, [isPending, isConfirmed]);
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}
@@ -30,89 +66,91 @@ function MigratePage() {
           <div className="flex justify-center pb-6">
             <Logo />
           </div>
+          <>
+            <form onSubmit={handleSubmit}>
+              {activeStep === 0 && (
+                <>
+                  <div>
+                    <Input
+                      name="token_name"
+                      label="Token Name"
+                      placeholder="DAI Stablecoin"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      name="token_symbol"
+                      label="Token Symbol"
+                      placeholder="$DAI"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      name="token_decimal"
+                      label="Token Decimal"
+                      placeholder="18"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      name="token_description"
+                      label="Token Description"
+                      type={'textarea'}
+                      placeholder="Token Description"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      name="token_address"
+                      label="Token Address on Ethereum(L1)"
+                      placeholder="Token address"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="py-6 flex flex-col justify-center items-center">
+                    <Button onClick={nextStep} variant="tertiary" text={'Next'} />
+                  </div>
+                </>
+              )}
 
-          {activeStep === 0 && (
-            <>
-              <div>
-                <Input
-                  name="token_name"
-                  label="Token Name"
-                  placeholder="DAI Stablecoin"
-                  onChange={() => {}}
-                />
-              </div>
-              <div>
-                <Input
-                  name="token_symbol"
-                  label="Token Symbol"
-                  placeholder="$DAI"
-                  onChange={() => {}}
-                />
-              </div>
-              <div>
-                <Input
-                  name="token_decimal"
-                  label="Token Decimal"
-                  placeholder="18"
-                  onChange={() => {}}
-                />
-              </div>
-              <div>
-                <Input
-                  name="token_description"
-                  label="Token Description"
-                  type={'textarea'}
-                  placeholder="Token Description"
-                  onChange={() => {}}
-                />
-              </div>
-              <div>
-                <Input
-                  name="token_address"
-                  label="Token Address on Ethereum(L1)"
-                  placeholder="Token address"
-                  onChange={() => {}}
-                />
-              </div>
-              <div className="py-6 flex flex-col justify-center items-center">
-                <Button onClick={nextStep} variant="tertiary" text={'Next'} />
-              </div>
-            </>
-          )}
+              {activeStep === 1 && (
+                <>
+                  <div>
+                    <Input
+                      name="logo"
+                      label="Logo url (must be in SVG format)"
+                      placeholder="Add your Logo URL"
+                      onChange={() => {}}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      name="website"
+                      label="Website Link"
+                      placeholder="www.njokuscript.com"
+                      onChange={() => {}}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      name="twitter"
+                      label="Twitter Link"
+                      placeholder="www.twitter.com/njokuscript"
+                      onChange={() => {}}
+                    />
+                  </div>
 
-          {activeStep === 1 && (
-            <>
-              <div>
-                <Input
-                  name="logo"
-                  label="Logo url (must be in SVG format)"
-                  placeholder="Add your Logo URL"
-                  onChange={() => {}}
-                />
-              </div>
-              <div>
-                <Input
-                  name="website"
-                  label="Website Link"
-                  placeholder="www.njokuscript.com"
-                  onChange={() => {}}
-                />
-              </div>
-              <div>
-                <Input
-                  name="twitter"
-                  label="Twitter Link"
-                  placeholder="www.twitter.com/njokuscript"
-                  onChange={() => {}}
-                />
-              </div>
-
-              <div className="py-6 flex flex-col justify-center items-center">
-                <Button onClick={nextStep} variant="tertiary" text={'Migrate to Base'} />
-              </div>
-            </>
-          )}
-
+                  <div className="py-6 flex flex-col justify-center items-center">
+                    <Button type="submit" variant="tertiary" text={'Migrate to Base'} />
+                  </div>
+                </>
+              )}
+            </form>
+          </>
           {activeStep === 2 && <MigrationProgress next={nextStep} />}
 
           {activeStep === 3 && (

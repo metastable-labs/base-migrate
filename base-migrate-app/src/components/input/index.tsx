@@ -10,10 +10,11 @@ const Input = (props: InputType) => {
 
   const [valueText, setValue] = useState('');
 
-  const handleOnChange = (value: string) => {
+  const handleOnChange = (e: any) => {
+    const value = e.target.value;
     if (value.length === 0) {
       setValue('');
-      onChange && onChange('');
+      onChange && onChange(e);
       return;
     }
 
@@ -27,13 +28,13 @@ const Input = (props: InputType) => {
 
     if (isNumberMatch || isAddressMatch) {
       setValue(value);
-      onChange && onChange(value);
+      onChange && onChange(e);
       return;
     }
 
     // Allow any text input
     setValue(value);
-    onChange && onChange(value);
+    onChange && onChange(e);
   };
 
   return (
@@ -46,22 +47,24 @@ const Input = (props: InputType) => {
           <textarea
             id={name}
             minLength={1000}
+            name={name}
             rows={4}
             disabled={disabled}
             placeholder={placeholder}
             value={value || valueText}
             className="justify-center text-black-250 w-full items-start self-stretch px-6 py-3.5 text-sm leading-5 bg-gray-50 rounded-lg border border-solid border-zinc-200 max-w-[504px] focus:outline focus:outline-blue-50 max-md:px-5"
-            onChange={(e) => handleOnChange(e.target.value)}
+            onChange={handleOnChange}
           />
         ) : (
           <input
             id={name}
             type={type}
+            name={name}
             disabled={disabled}
             placeholder={placeholder}
             value={value || valueText}
             className="justify-center text-black-250 w-full items-start self-stretch px-6 py-3.5 text-sm leading-5 bg-gray-50 rounded-lg border border-solid border-zinc-200 max-w-[504px] focus:outline focus:outline-blue-50 max-md:px-5"
-            onChange={(e) => handleOnChange(e.target.value)}
+            onChange={handleOnChange}
           />
         )}
       </div>
