@@ -29,7 +29,6 @@ const useContract = () => {
     let transactionData;
     if (hash) {
       transactionData = getTransactionReceipt(wagmiConfig, { hash, chainId });
-      console.log(transactionData);
     }
     return transactionData;
   };

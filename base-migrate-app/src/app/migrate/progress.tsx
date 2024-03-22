@@ -2,56 +2,89 @@ import React from 'react';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import moment from 'moment';
+
 import { GoodIcon, LineIcon, LoadingIcon } from '../../../public/icons';
 
 const steps = [
   {
     title: 'Token contract deployed',
     status: 'pending',
-    time: '2:30am',
+    time: '',
   },
   {
     title: 'Contract verified',
     status: 'stale',
-    time: '2:30am',
+    time: '',
   },
   {
     title: 'Forking superchain token list to github repo',
 
     status: 'stale',
-    time: '2:31am',
+    time: '',
   },
   {
     title: 'Adding token data to the forked superchain repo',
     status: 'stale',
-    time: '2:31am',
+    time: '',
   },
   {
     title: 'Raising PR on the superchain repo',
     status: 'stale',
-    time: '2:31am',
+    time: '',
   },
 ];
-const MigrationProgress = ({ next }: { next: () => void }) => {
+const MigrationProgress = ({
+  next,
+  isPending,
+  isConfirmed,
+  isDone,
+}: {
+  next: () => void;
+  isPending: boolean;
+  isConfirmed: boolean;
+  isDone: boolean;
+}) => {
   const [data, setData] = useState(steps);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
     setTimeout(() => {
+      if (step === 0 && isPending) return;
+
       const newData = [...data];
 
-      newData[step].status = 'completed';
+      if (newData[step].status !== 'completed') {
+        newData[step].time = moment().format('h:mm a');
+        newData[step].status = 'completed';
+      }
       if (step !== 4) {
         newData[step + 1].status = 'pending';
       }
 
       setData([...newData]);
 
-      setStep(step + 1);
+      //   setStep(step + 1);
 
       if (step + 1 === 4) next();
     }, 2500);
-  }, [step]);
+  }, [step, isPending]);
+
+  useEffect(() => {
+    if (isConfirmed && step < 2) {
+      setTimeout(() => {
+        setStep(step + 1);
+      }, 2000);
+    }
+  }, [isPending, isConfirmed, step]);
+
+  useEffect(() => {
+    if (isDone && step > 1) {
+      setTimeout(() => {
+        setStep(step + 1);
+      }, 3000);
+    }
+  }, [isDone, step]);
 
   return (
     <div className="flex flex-col gap-2">

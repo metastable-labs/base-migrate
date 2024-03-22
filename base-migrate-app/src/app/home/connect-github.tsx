@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { Button } from '@/components';
 import { GithubIcon, SmallGithubIcon } from '../../../public/icons';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
-import { axiosInstance } from '@/utils/axios';
+import { axiosInstance, setTokenHeader } from '@/utils/axios';
 
 interface ResponseProp {
   accessToken: string;
@@ -45,6 +45,7 @@ const ConnectGithub = () => {
         expires: new Date(new Date().getTime() + data?.expiresIn * 1000),
       });
       setCookie('isAuthenticated', true);
+      setTokenHeader(data?.accessToken);
 
       toast('Github connected sucessfully', {
         type: 'success',

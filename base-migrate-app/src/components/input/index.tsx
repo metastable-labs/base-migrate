@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { InputType } from './types';
 
 const Input = (props: InputType) => {
-  const { type, disabled, label, name, placeholder, valid, value, onChange, error } = props;
+  const { type, disabled, label, name, placeholder, valid, value, onChange, error, required } =
+    props;
 
   const [valueText, setValue] = useState('');
 
@@ -54,6 +55,7 @@ const Input = (props: InputType) => {
             value={value || valueText}
             className="justify-center text-black-250 w-full items-start self-stretch px-6 py-3.5 text-sm leading-5 bg-gray-50 rounded-lg border border-solid border-zinc-200 max-w-[504px] focus:outline focus:outline-blue-50 max-md:px-5"
             onChange={handleOnChange}
+            required={required}
           />
         ) : (
           <input
@@ -65,6 +67,7 @@ const Input = (props: InputType) => {
             value={value || valueText}
             className="justify-center text-black-250 w-full items-start self-stretch px-6 py-3.5 text-sm leading-5 bg-gray-50 rounded-lg border border-solid border-zinc-200 max-w-[504px] focus:outline focus:outline-blue-50 max-md:px-5"
             onChange={handleOnChange}
+            required={required}
           />
         )}
       </div>
