@@ -14,16 +14,18 @@ export const isContractVerified = async (address: string) => {
   }
 };
 
-export const verifyContract = async (address: string, chainId: number,
-  arguementEncoded: string) => {
+export const verifyContract = async (
+  address: string,
+  chainId: number,
+  arguementEncoded: string
+) => {
   try {
-  //  const contractVerified = await isContractVerified(address);
+    const contractVerified = await isContractVerified(address);
 
-  // if (contractVerified) {
-  //   return true;
-  // }
+    if (contractVerified) {
+      return true;
+    }
 
- 
     const response = await axios.post(
       `${env.etherscan.apiUrl}?module=contract&action=verifysourcecode&apikey=${env.etherscan.apiKey}&chainId=${chainId}`,
       {
@@ -45,8 +47,6 @@ export const verifyContract = async (address: string, chainId: number,
     );
     return response.data.result;
   } catch (error) {
-    console.log(error);
-
     return false;
   }
 };
