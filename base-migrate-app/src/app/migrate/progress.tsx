@@ -49,7 +49,7 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
 
   useEffect(() => {
     setTimeout(() => {
-      if (step === 0 && isPending) return;
+      if (step === 0 && isPending && !isConfirmed) return;
 
       const newData = [...data];
 
