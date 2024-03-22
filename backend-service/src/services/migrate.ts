@@ -23,13 +23,6 @@ export class MigrateService {
 
     const pullRequestUrl = `${env.github.url}/${env.chain.username}/${repo}/compare/master...${owner}:${repo}:master`;
 
-    await this.etherscanVerify(
-      body.chainId,
-      body.tokenData.tokens.base.address,
-      body.tokenData.name,
-      body.tokenData.symbol
-    );
-
     return {
       pullRequestUrl,
     };
