@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 import { GoodIcon, LineIcon, LoadingIcon } from '../../../public/icons';
 
@@ -66,7 +67,12 @@ const MigrationProgress = ({
 
       //   setStep(step + 1);
 
-      if (step + 1 === 4) next();
+      if (step + 1 === 4) {
+        next();
+        toast('Migration complete', {
+          type: 'success',
+        });
+      }
     }, 2500);
   }, [step, isPending]);
 
