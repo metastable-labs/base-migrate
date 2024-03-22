@@ -31,6 +31,7 @@ function MigratePage() {
     twitter: '',
   });
   const [done, setDone] = useState(false);
+  const [pullRequestUrl, setPullRequestUrl] = useState('');
   const [cookies] = useCookies(['authtoken']);
 
   const handleChange = (e: any) => {
@@ -88,7 +89,8 @@ function MigratePage() {
       };
 
       const response = await axiosInstance.post(`/migrate/token`, body);
-      console.log(response, 'response');
+
+      setPullRequestUrl(response?.data?.data?.pullRequestUrl);
       setDone(true);
     } catch (error) {
       console.error(error);
@@ -235,9 +237,9 @@ function MigratePage() {
                 token and your token will be available on the Base Bridge.
               </p>
 
-              <div className="py-7 flex flex-col justify-center items-center">
+              <a href={pullRequestUrl} className="py-7 flex flex-col justify-center items-center">
                 <Button onClick={() => {}} variant="tertiary" text={'Raise Pull Request'} />
-              </div>
+              </a>
             </div>
           )}
         </div>
