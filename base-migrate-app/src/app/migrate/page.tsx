@@ -10,7 +10,7 @@ import MigrationProgress from './progress';
 import useContract from '@/hooks/useContract';
 
 function MigratePage() {
-  const { deployToken } = useContract();
+  const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
   const [activeStep, setActiveStep] = React.useState(0);
   const [formData, setFormData] = React.useState({
     token_name: '',
@@ -25,7 +25,7 @@ function MigratePage() {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    console.log(`name: ${name}, value: ${value}`);
+
     setFormData((prevFormData: any) => ({
       ...prevFormData,
       [name]: value,
@@ -37,11 +37,19 @@ function MigratePage() {
   };
 
   const handleSubmit = (e: any) => {
-    console.log(formData, 'here');
     e.preventDefault();
     deployToken(formData.token_address, formData.token_name, formData.token_symbol);
   };
+  console.log(isConfirmed, isPending);
 
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const data = await getTransactionData();
+      console.log(data, 'tx data');
+      console.log('deployed token on base:', data?.logs[0].address);
+    };
+    fetchData();
+  }, [isPending, isConfirmed]);
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}
