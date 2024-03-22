@@ -184,7 +184,7 @@ function MigratePage() {
                       name="logo"
                       label="Logo url (must be in SVG format)"
                       placeholder="Add your Logo URL"
-                      onChange={() => {}}
+                      onChange={handleChange}
                       value={formData.logo}
                       required
                     />
@@ -194,7 +194,7 @@ function MigratePage() {
                       name="website"
                       label="Website Link"
                       placeholder="www.njokuscript.com"
-                      onChange={() => {}}
+                      onChange={handleChange}
                       value={formData.website}
                     />
                   </div>
@@ -203,7 +203,7 @@ function MigratePage() {
                       name="twitter"
                       label="Twitter Link"
                       placeholder="www.twitter.com/njokuscript"
-                      onChange={() => {}}
+                      onChange={handleChange}
                       value={formData.twitter}
                     />
                   </div>
@@ -237,7 +237,11 @@ function MigratePage() {
                 token and your token will be available on the Base Bridge.
               </p>
 
-              <a href={pullRequestUrl} className="py-7 flex flex-col justify-center items-center">
+              <a
+                target={'_blank'}
+                rel={'noreferrer'}
+                href={pullRequestUrl}
+                className="py-7 flex flex-col justify-center items-center">
                 <Button onClick={() => {}} variant="tertiary" text={'Raise Pull Request'} />
               </a>
             </div>
