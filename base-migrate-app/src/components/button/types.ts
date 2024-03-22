@@ -1,9 +1,9 @@
 export interface ButtonType {
   onClick?: () => void;
   text: string;
-  type?: "button" | "submit" | "reset";
+  type?: 'button' | 'submit' | 'reset';
   loading?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode;
-  variant?: "primary" | "secondary" | "tertiary";
+  variant?: 'primary' | 'secondary' | 'tertiary';
 }
