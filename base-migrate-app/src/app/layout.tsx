@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Base Migrate',
     description: 'Migrate ERC20 tokens to Base Network',
-    url: 'https://base.xyz',
+    url: 'https://base-migrate.xyz',
     type: 'website',
     images: [
       {
@@ -36,11 +36,11 @@ export const metadata: Metadata = {
         height: 630,
       },
     ],
-    siteName: 'base.xyz',
+    siteName: 'base-migrate.xyz',
   },
   twitter: {
     card: 'summary_large_image',
-    site: 'https://base.xyz',
+    site: 'https://base-migrate.xyz',
     title: 'Base Migrate',
     description: 'Migrate ERC20 tokens to Base Network',
     images: [
