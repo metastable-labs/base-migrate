@@ -35,17 +35,15 @@ const steps = [
     time: '',
   },
 ];
-const MigrationProgress = ({
-  next,
-  isPending,
-  isConfirmed,
-  isDone,
-}: {
+
+interface Prop {
   next: () => void;
   isPending: boolean;
   isConfirmed: boolean;
   isDone: boolean;
-}) => {
+  refresh: boolean;
+}
+const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Prop) => {
   const [data, setData] = useState(steps);
   const [step, setStep] = useState(0);
 
@@ -85,12 +83,18 @@ const MigrationProgress = ({
   }, [isPending, isConfirmed, step]);
 
   useEffect(() => {
+    if (refresh) {
+      setData({ ...steps });
+      setStep(0);
+      return;
+    }
+
     if (isDone && step > 1) {
       setTimeout(() => {
         setStep(step + 1);
       }, 3000);
     }
-  }, [isDone, step]);
+  }, [isDone, step, refresh]);
 
   return (
     <div className="flex flex-col gap-2">

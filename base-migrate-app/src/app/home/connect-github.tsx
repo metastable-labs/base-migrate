@@ -58,6 +58,15 @@ const ConnectGithub = () => {
       return navigate.push('/migrate');
     } catch (error) {
       console.error(error);
+      toast('An error occured! Please try again later', {
+        type: 'error',
+      });
+
+      if (!cookies?.isAuthenticated) {
+        setCookie('isAuthenticated', true, {
+          expires: new Date(new Date().getTime() + 10 * 365 * 24 * 60 * 60 * 1000),
+        });
+      }
     } finally {
       setTimeout(() => {
         setLoading(false);
