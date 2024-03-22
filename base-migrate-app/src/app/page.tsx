@@ -2,10 +2,13 @@
 
 import React from 'react';
 import { useCookies } from 'react-cookie';
+import { useAccount } from 'wagmi';
+
 import { Button } from '@/components';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
 
 function Page() {
+  const { isConnected } = useAccount();
   const { navigate } = useSystemFunctions();
   const [cookies] = useCookies(['authtoken']);
 
@@ -22,7 +25,7 @@ function Page() {
           token list repo.
         </p>
         <Button
-          onClick={() => navigate.push(authToken ? '/migrate' : '/home')}
+          onClick={() => navigate.push(authToken && isConnected ? '/migrate' : '/home')}
           text="Migrate to base"
         />
       </div>

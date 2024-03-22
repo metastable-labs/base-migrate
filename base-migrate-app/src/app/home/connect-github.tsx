@@ -25,7 +25,7 @@ const ConnectGithub = () => {
   const { navigate, searchParams } = useSystemFunctions();
   const code = searchParams.get('code');
   const [cookies, setCookie] = useCookies(['authtoken', 'isAuthenticated']);
-  const [loading, setLoading] = useState(code ? true : false);
+  const [loading, setLoading] = useState(false);
 
   const url = !cookies?.isAuthenticated
     ? 'https://github.com/apps/base-migrate/installations/new'
@@ -59,7 +59,7 @@ const ConnectGithub = () => {
 
   useEffect(() => {
     setup();
-  }, []);
+  }, [code]);
 
   return (
     <>
