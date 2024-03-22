@@ -44,7 +44,12 @@ const ConnectGithub = () => {
       setCookie('authtoken', data?.accessToken, {
         expires: new Date(new Date().getTime() + data?.expiresIn * 1000),
       });
-      setCookie('isAuthenticated', true);
+
+      if (!cookies?.isAuthenticated) {
+        setCookie('isAuthenticated', true, {
+          expires: new Date(new Date().getTime() + 10 * 365 * 24 * 60 * 60 * 1000),
+        });
+      }
       setTokenHeader(data?.accessToken);
 
       toast('Github connected sucessfully', {
@@ -54,11 +59,16 @@ const ConnectGithub = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     }
   };
 
   useEffect(() => {
+    if (cookies.authtoken) {
+      return navigate.push('/');
+    }
     setup();
   }, [code]);
 
