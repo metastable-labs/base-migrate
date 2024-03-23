@@ -1,12 +1,12 @@
 {
   "name": "@base-migrate/backend-service",
   "version": "1.0.0",
-  "main": "dist/src/main.js",
+  "main": "dist/main.js",
   "author": "iamnotstatic",
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/main.ts",
-    "start:prod": "node dist/src/main.js",
+    "start:prod": "node dist/main.js",
     "start:dev": "nodemon --exec ts-node src/main.ts",
     "build": "rimraf dist && tsc"
   },
