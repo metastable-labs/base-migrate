@@ -1,6 +1,7 @@
 {
   "name": "@base-migrate/backend-service",
   "version": "1.0.0",
+  "description": "base migrate backend service",
   "main": "dist/main.js",
   "author": "iamnotstatic",
   "license": "MIT",
