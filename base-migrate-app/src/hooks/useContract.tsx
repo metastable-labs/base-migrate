@@ -2,8 +2,7 @@ import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { getAccount, getTransactionReceipt } from '@wagmi/core';
 import { wagmiConfig } from '@/config/rainbowkit';
 import MigrateFactory from '@/config/addresses';
-import BasedERC20Factory from '@/config/abis/BasedERC20Factory.json';
-import React from 'react';
+import OptimismMintableERC20Factory from '@/config/abis/OptimismMintableERC20Factory.json';
 
 const useContract = () => {
   const { chainId } = getAccount(wagmiConfig);
@@ -16,13 +15,12 @@ const useContract = () => {
   const sepoliaFactory = chainId === 84532 && MigrateFactory?.base_sepolia;
 
   const deployToken = (remoteToken: string, tokenName: string, tokenSymbol: string) => {
-    const info = writeContract({
+    writeContract({
       address: sepoliaFactory,
-      abi: BasedERC20Factory.abi,
-      functionName: 'beBased',
+      abi: OptimismMintableERC20Factory.abi,
+      functionName: 'createStandardL2Token',
       args: [remoteToken, tokenName, tokenSymbol],
     });
-    console.log(info, 'here');
   };
 
   const getTransactionData = () => {
