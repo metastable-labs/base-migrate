@@ -5,6 +5,7 @@ import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/config/rainbowkit';
 import { useCookies } from 'react-cookie';
 import {trim} from 'viem'
+import { toast } from 'react-toastify';
 
 import StepHeader from './step-header';
 import { Logo } from '../../../public/icons';
@@ -31,6 +32,7 @@ function MigratePage() {
     website: '',
     twitter: '',
   });
+  const [refresh, setRefresh] = useState(false);
   const [done, setDone] = useState(false);
   const [pullRequestUrl, setPullRequestUrl] = useState('');
   const [cookies] = useCookies(['authtoken']);
@@ -93,6 +95,15 @@ function MigratePage() {
       setDone(true);
     } catch (error) {
       console.error(error);
+      toast('An error occured! Please try again later', {
+        type: 'error',
+      });
+
+      setRefresh(true);
+
+      setTimeout(() => {
+        setRefresh(false);
+      }, 2000);
     }
   };
 
@@ -220,6 +231,7 @@ function MigratePage() {
               isPending={isPending}
               isConfirmed={isConfirmed}
               next={nextStep}
+              refresh={refresh}
             />
           )}
 
