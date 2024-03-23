@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import '@rainbow-me/rainbowkit/styles.css';
 
 import React, { ReactNode } from 'react';
@@ -7,8 +8,8 @@ import { baseSepolia, base } from 'wagmi/chains';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 export const wagmiConfig = getDefaultConfig({
-  appName: 'My RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
+  appName: process.env.NEXT_PUBLIC_APP_NAME!,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
   chains: [baseSepolia, base],
   ssr: true, // If your dApp uses server side rendering (SSR)
 });

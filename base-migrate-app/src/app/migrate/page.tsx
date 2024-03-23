@@ -1,6 +1,11 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
+import { getAccount } from '@wagmi/core';
+import { wagmiConfig } from '@/config/rainbowkit';
+import { useCookies } from 'react-cookie';
+import {trim} from 'viem'
+import { toast } from 'react-toastify';
 
 import StepHeader from './step-header';
 import { Logo } from '../../../public/icons';
@@ -8,11 +13,16 @@ import Input from '@/components/input';
 import { Button } from '@/components';
 import MigrationProgress from './progress';
 import useContract from '@/hooks/useContract';
+import { axiosInstance } from '@/utils/axios';
+import useSystemFunctions from '@/hooks/useSystemFunctions';
 
 function MigratePage() {
   const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [formData, setFormData] = React.useState({
+  const { chainId } = getAccount(wagmiConfig);
+  const { navigate } = useSystemFunctions();
+
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState({
     token_name: '',
     token_symbol: '',
     token_decimal: '',
@@ -22,6 +32,10 @@ function MigratePage() {
     website: '',
     twitter: '',
   });
+  const [refresh, setRefresh] = useState(false);
+  const [done, setDone] = useState(false);
+  const [pullRequestUrl, setPullRequestUrl] = useState('');
+  const [cookies] = useCookies(['authtoken']);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -38,16 +52,62 @@ function MigratePage() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    if (!cookies?.authtoken) {
+      return navigate.push('/home');
+    }
+
+    nextStep();
+
     deployToken(formData.token_address, formData.token_name, formData.token_symbol);
   };
-  console.log(isConfirmed, isPending);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      if (isPending || !isConfirmed) return;
+
       const data = await getTransactionData();
-      console.log(data, 'tx data');
-      console.log('deployed token on base:', data?.logs[0].address);
-    };
+
+      const body = {
+        chainId,
+        logoUrl: formData.logo,
+        tokenData: {
+          name: formData.token_name,
+          symbol: formData.token_symbol,
+          decimals: formData.token_decimal,
+          description: formData.token_description,
+          website: formData.website,
+          twitter: formData.twitter,
+          tokens: {
+            ethereum: {
+              address: formData.token_address,
+            },
+            base: {
+              address: trim(data?.logs[0]?.topics[2]!),
+            },
+          },
+        },
+      };
+
+      const response = await axiosInstance.post(`/migrate/token`, body);
+
+      setPullRequestUrl(response?.data?.data?.pullRequestUrl);
+      setDone(true);
+    } catch (error) {
+      console.error(error);
+      toast('An error occured! Please try again later', {
+        type: 'error',
+      });
+
+      setRefresh(true);
+
+      setTimeout(() => {
+        setRefresh(false);
+      }, 2000);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [isPending, isConfirmed]);
   return (
@@ -76,6 +136,8 @@ function MigratePage() {
                       label="Token Name"
                       placeholder="DAI Stablecoin"
                       onChange={handleChange}
+                      value={formData.token_name}
+                      required
                     />
                   </div>
                   <div>
@@ -84,6 +146,8 @@ function MigratePage() {
                       label="Token Symbol"
                       placeholder="$DAI"
                       onChange={handleChange}
+                      value={formData.token_symbol}
+                      required
                     />
                   </div>
                   <div>
@@ -92,6 +156,8 @@ function MigratePage() {
                       label="Token Decimal"
                       placeholder="18"
                       onChange={handleChange}
+                      value={formData.token_decimal}
+                      required
                     />
                   </div>
                   <div>
@@ -101,6 +167,8 @@ function MigratePage() {
                       type={'textarea'}
                       placeholder="Token Description"
                       onChange={handleChange}
+                      value={formData.token_description}
+                      required
                     />
                   </div>
                   <div>
@@ -109,6 +177,8 @@ function MigratePage() {
                       label="Token Address on Ethereum(L1)"
                       placeholder="Token address"
                       onChange={handleChange}
+                      value={formData.token_address}
+                      required
                     />
                   </div>
                   <div className="py-6 flex flex-col justify-center items-center">
@@ -124,7 +194,9 @@ function MigratePage() {
                       name="logo"
                       label="Logo url (must be in SVG format)"
                       placeholder="Add your Logo URL"
-                      onChange={() => {}}
+                      onChange={handleChange}
+                      value={formData.logo}
+                      required
                     />
                   </div>
                   <div>
@@ -132,7 +204,8 @@ function MigratePage() {
                       name="website"
                       label="Website Link"
                       placeholder="www.njokuscript.com"
-                      onChange={() => {}}
+                      onChange={handleChange}
+                      value={formData.website}
                     />
                   </div>
                   <div>
@@ -140,7 +213,8 @@ function MigratePage() {
                       name="twitter"
                       label="Twitter Link"
                       placeholder="www.twitter.com/njokuscript"
-                      onChange={() => {}}
+                      onChange={handleChange}
+                      value={formData.twitter}
                     />
                   </div>
 
@@ -151,7 +225,15 @@ function MigratePage() {
               )}
             </form>
           </>
-          {activeStep === 2 && <MigrationProgress next={nextStep} />}
+          {activeStep === 2 && (
+            <MigrationProgress
+              isDone={done}
+              isPending={isPending}
+              isConfirmed={isConfirmed}
+              next={nextStep}
+              refresh={refresh}
+            />
+          )}
 
           {activeStep === 3 && (
             <div>
@@ -166,9 +248,13 @@ function MigratePage() {
                 token and your token will be available on the Base Bridge.
               </p>
 
-              <div className="py-7 flex flex-col justify-center items-center">
+              <a
+                target={'_blank'}
+                rel={'noreferrer'}
+                href={pullRequestUrl}
+                className="py-7 flex flex-col justify-center items-center">
                 <Button onClick={() => {}} variant="tertiary" text={'Raise Pull Request'} />
-              </div>
+              </a>
             </div>
           )}
         </div>

@@ -1,15 +1,86 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
-import { Button, Modal } from '@/components';
-import { GithubIcon, Logo, SmallGithubIcon } from '../../../public/icons';
-import Input from '@/components/input';
-import Link from 'next/link';
+import React, { useEffect, useState, memo } from 'react';
+import { useCookies } from 'react-cookie';
+import { toast } from 'react-toastify';
+
+import { Button } from '@/components';
+import { GithubIcon, SmallGithubIcon } from '../../../public/icons';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
+import { axiosInstance, setTokenHeader } from '@/utils/axios';
+
+interface ResponseProp {
+  accessToken: string;
+  expiresIn: number;
+  refreshToken: string;
+  refreshTokenExpiresIn: number;
+  user: {
+    name: string;
+    username: string;
+    avatar: string;
+    profile: string;
+  };
+}
 
 const ConnectGithub = () => {
-  const { navigate } = useSystemFunctions();
-  const [open, setOpen] = useState(false);
-  const [token, setToken] = useState('');
+  const { navigate, searchParams } = useSystemFunctions();
+  const code = searchParams.get('code');
+  const [cookies, setCookie] = useCookies(['authtoken', 'isAuthenticated']);
+  const [loading, setLoading] = useState(false);
+
+  const url = !cookies?.isAuthenticated
+    ? 'https://github.com/apps/base-migrate/installations/new'
+    : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_url=http://localhost:3001/home';
+
+  const setup = async () => {
+    try {
+      if (!code || loading) return;
+
+      setLoading(true);
+
+      const response = await axiosInstance.get(`/auth/github?code=${code}`);
+
+      const data: ResponseProp = response.data?.data;
+
+      setCookie('authtoken', data?.accessToken, {
+        expires: new Date(new Date().getTime() + data?.expiresIn * 1000),
+      });
+
+      if (!cookies?.isAuthenticated) {
+        setCookie('isAuthenticated', true, {
+          expires: new Date(new Date().getTime() + 10 * 365 * 24 * 60 * 60 * 1000),
+        });
+      }
+      setTokenHeader(data?.accessToken);
+
+      toast('Github connected sucessfully', {
+        type: 'success',
+      });
+      return navigate.push('/migrate');
+    } catch (error) {
+      console.error(error);
+      toast('An error occured! Please try again later', {
+        type: 'error',
+      });
+
+      if (!cookies?.isAuthenticated) {
+        setCookie('isAuthenticated', true, {
+          expires: new Date(new Date().getTime() + 10 * 365 * 24 * 60 * 60 * 1000),
+        });
+      }
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
+  useEffect(() => {
+    if (cookies.authtoken) {
+      return navigate.push('/');
+    }
+    setup();
+  }, [code]);
+
   return (
     <>
       <div className="w-[80%] md:w-[376px] p-6 rounded-xl border border-black-200 flex flex-col justify-center items-center gap-6">
@@ -19,49 +90,18 @@ const ConnectGithub = () => {
           The github account connected will be used to fork and create a pull request on the
           Superchain token list repo.
         </p>
-        <Button
-          variant="secondary"
-          onClick={() => setOpen(true)}
-          text="Connect github"
-          icon={<SmallGithubIcon />}
-        />
+        <a href={url}>
+          <Button
+            onClick={() => setLoading(true)}
+            loading={loading}
+            variant="secondary"
+            text="Connect github"
+            icon={<SmallGithubIcon />}
+          />
+        </a>
       </div>
-
-      {open && (
-        <Modal close={() => setOpen(false)}>
-          <div className="flex flex-col items-center gap-6">
-            <Logo />
-            <div className="font-medium text-sm md:text-base text-black-250">Connect Github</div>
-            <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center">
-              The github account connected will be used to fork and create a pull request on the
-              Superchain token list repo.
-            </p>
-          </div>
-          <div>
-            <Input
-              name="github"
-              label="Github access token"
-              placeholder="Enter Access token"
-              onChange={setToken}
-            />
-          </div>
-          <div className="py-3 flex flex-col justify-center items-center">
-            <Button
-              onClick={() => navigate.push('/migrate')}
-              variant="tertiary"
-              text={'Continue'}
-            />
-            <Link
-              href="https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
-              target="_blank"
-              className="text-blue-50 underline justify-center pt-6">
-              Don’t know how to get your Github access token?
-            </Link>
-          </div>
-        </Modal>
-      )}
     </>
   );
 };
 
-export default ConnectGithub;
+export default memo(ConnectGithub);

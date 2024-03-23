@@ -2,6 +2,7 @@
 'use client';
 import React from 'react';
 import { useAccount } from 'wagmi';
+import { useCookies } from 'react-cookie';
 
 import useConnect from '@/hooks/useConnect';
 import { Button, ClickAnimation, Container } from '..';
@@ -12,6 +13,10 @@ const Header = () => {
   const { navigate, pathname } = useSystemFunctions();
   const { connectModal } = useConnect();
   const { isConnected, isDisconnected, connector, address } = useAccount();
+  const [cookies] = useCookies(['authtoken']);
+
+  const authToken = cookies?.authtoken;
+  const route = authToken && isConnected ? '/migrate' : '/home';
   return (
     <Container
       variant={pathname === '/' ? 'home' : 'dash'}
@@ -31,7 +36,7 @@ const Header = () => {
 
           {!isConnected || !address || isDisconnected ? (
             <Button
-              onClick={() => (pathname === '/' ? navigate.push('/home') : connectModal())}
+              onClick={() => (pathname === '/' ? navigate.push(route) : connectModal())}
               text={pathname === '/' ? 'Migrate to base' : 'Connect wallet'}
             />
           ) : (

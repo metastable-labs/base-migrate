@@ -31,9 +31,15 @@ const Button = ({
       )}
       disabled={disabled}
       type={type}>
-      <div>{loading ? 'Loading...' : text}</div>
+      <div className="text-sm">{loading ? 'Loading...' : text}</div>
 
-      {icon && icon}
+      {icon && !loading && icon}
+
+      {loading && (
+        <div className="animate-spin">
+          <div className="h-4 w-4 border-2 border-dashed border-white-50 rounded-full"></div>
+        </div>
+      )}
     </motion.button>
   );
 };

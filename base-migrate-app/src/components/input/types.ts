@@ -12,4 +12,5 @@ export interface InputType {
   value?: string;
   onChange?: (val: string) => void;
   error?: string | React.ReactNode;
+  required?: boolean;
 }
