@@ -1,0 +1,33 @@
+name: Backend Build CI
+
+on:
+  push:
+    paths:
+      - 'backend-service/**'
+  pull_request:
+    paths:
+      - 'backend-service/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+      - name: Install dependencies
+        run: | 
+          cd backend-service && yarn
+
+      - name: Build
+        run: | 
+          cd backend-service && yarn build
