@@ -2,6 +2,7 @@
 import React, { useEffect, useState, memo } from 'react';
 import { useCookies } from 'react-cookie';
 import { toast } from 'react-toastify';
+import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components';
 import { GithubIcon, SmallGithubIcon } from '../../../public/icons';
@@ -22,7 +23,10 @@ interface ResponseProp {
 }
 
 const ConnectGithub = () => {
-  const { navigate, searchParams } = useSystemFunctions();
+  const { navigate } = useSystemFunctions();
+
+  const searchParams = useSearchParams();
+
   const code = searchParams.get('code');
   const [cookies, setCookie] = useCookies(['authtoken', 'isAuthenticated']);
   const [loading, setLoading] = useState(false);

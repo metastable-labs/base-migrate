@@ -10,7 +10,7 @@ export interface InputType {
   multiline?: boolean;
   valid?: boolean;
   value?: string;
-  onChange?: (val: string) => void;
+  onChange?: (val: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string | React.ReactNode;
   required?: boolean;
 }

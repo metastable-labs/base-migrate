@@ -3,7 +3,6 @@ import { getAccount, getTransactionReceipt } from '@wagmi/core';
 import { wagmiConfig } from '@/config/rainbowkit';
 import MigrateFactory from '@/config/addresses';
 import BasedERC20Factory from '@/config/abis/BasedERC20Factory.json';
-import React from 'react';
 
 const useContract = () => {
   const { chainId } = getAccount(wagmiConfig);
