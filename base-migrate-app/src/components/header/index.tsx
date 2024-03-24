@@ -8,9 +8,17 @@ import { Network, supportedNetworks, wagmiConfig } from '@/config/rainbowkit';
 
 import useConnect from '@/hooks/useConnect';
 import { Button, ClickAnimation, Container } from '..';
-import { DropdownIcon, Logo, MetamaskIcon, SmallLogo } from '../../../public/icons';
+import {
+  BetaIcon,
+  DropdownIcon,
+  Logo,
+  MenuIcon,
+  MetamaskIcon,
+  SmallLogo,
+} from '../../../public/icons';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
 import SwitchNetwork from './switch-network';
+import MenuComponent from './menu';
 
 const Header = () => {
   const { navigate, pathname } = useSystemFunctions();
@@ -21,6 +29,7 @@ const Header = () => {
 
   const [showNetworks, setShowNetworks] = useState(false);
   const [currentNetwork, setCurrentNetwork] = useState<Network>();
+  const [openMenu, setOpenMenu] = useState(false);
 
   const authToken = cookies?.authtoken;
   const route = authToken && isConnected ? '/migrate' : '/home';
@@ -47,8 +56,10 @@ const Header = () => {
                 <SmallLogo />
               </div>
 
-              <div className="text-xs md:text-xl text-black-100 font-medium hidden md:flex">
-                Base Migrate
+              <div className="text-xs md:text-xl text-black-100 font-medium">Base Migrate</div>
+
+              <div className="ml-7 md:ml-16">
+                <BetaIcon />
               </div>
             </div>
 
@@ -58,32 +69,38 @@ const Header = () => {
                 text={pathname === '/' ? 'Migrate to base' : 'Connect wallet'}
               />
             ) : (
-              <div className="flex items-center justify-end gap-4 md:gap-10">
-                <ClickAnimation
-                  onClick={() => setShowNetworks(true)}
-                  classes="flex items-center gap-2">
-                  {currentNetwork?.icon}
-                  <div className="text-[10px] md:text-xs text-black-350 mt-0.5">
-                    {currentNetwork?.name}
-                  </div>
-                  <div className="md:ml-3">
-                    <DropdownIcon />
-                  </div>
-                </ClickAnimation>
-
-                <ClickAnimation classes="flex items-center gap-2">
-                  <MetamaskIcon />
-                  <div>
-                    <div className="text-[10px] md:text-xs text-black-250 font-medium">
-                      Metamask
-                    </div>
+              <div>
+                <div className="items-center justify-end gap-4 md:gap-10 hidden md:flex">
+                  <ClickAnimation
+                    onClick={() => setShowNetworks(true)}
+                    classes="flex items-center gap-2">
+                    {currentNetwork?.icon}
                     <div className="text-[10px] md:text-xs text-black-350 mt-0.5">
-                      {address.slice(0, 6)}...{address.slice(-4)}
+                      {currentNetwork?.name}
                     </div>
-                  </div>
-                  <div className="md:ml-3">
-                    <DropdownIcon />
-                  </div>
+                    <div className="md:ml-3">
+                      <DropdownIcon />
+                    </div>
+                  </ClickAnimation>
+
+                  <ClickAnimation classes="flex items-center gap-2">
+                    <MetamaskIcon />
+                    <div>
+                      <div className="text-[10px] md:text-xs text-black-250 font-medium">
+                        Metamask
+                      </div>
+                      <div className="text-[10px] md:text-xs text-black-350 mt-0.5">
+                        {address.slice(0, 6)}...{address.slice(-4)}
+                      </div>
+                    </div>
+                    <div className="md:ml-3">
+                      <DropdownIcon />
+                    </div>
+                  </ClickAnimation>
+                </div>
+
+                <ClickAnimation classes="md:hidden" onClick={() => setOpenMenu(true)}>
+                  <MenuIcon />
                 </ClickAnimation>
               </div>
             )}
@@ -94,6 +111,8 @@ const Header = () => {
       {isConnected && address && showNetworks && !isDisconnected && (
         <SwitchNetwork setShowNetworks={setShowNetworks} />
       )}
+
+      <MenuComponent isOpen={openMenu} setIsOpen={setOpenMenu} />
     </>
   );
 };
