@@ -36,6 +36,7 @@ export class MigrateController {
         data: response,
       });
     } catch (error) {
+      console.log("MigrateController -> migrateToken -> error", error)
       return res.status(error.status).json({
         message: error.message,
         statusCode: error.status,
