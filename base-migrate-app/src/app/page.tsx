@@ -3,16 +3,26 @@
 import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useAccount } from 'wagmi';
+import useConnect from '@/hooks/useConnect';
 
 import { Button } from '@/components';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
 
 function Page() {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
+  const { connectModal } = useConnect();
   const { navigate } = useSystemFunctions();
   const [cookies] = useCookies(['authtoken']);
 
   const authToken = cookies?.authtoken;
+
+  const handleConnect = () => {
+    if (!isConnected && !address) {
+      return connectModal();
+    }
+
+    return navigate.push(authToken ? '/migrate' : '/home');
+  };
 
   return (
     <div className="min-h-[89vh] flex flex-col justify-between items-center pt-20 relative bg-white-100">
@@ -24,10 +34,7 @@ function Page() {
           Automatically deploy canonical bridged ERC20 to base and Create a PR on the superchain
           token list repo.
         </p>
-        <Button
-          onClick={() => navigate.push(authToken && isConnected ? '/migrate' : '/home')}
-          text="Migrate to base"
-        />
+        <Button onClick={handleConnect} text="Migrate to base" />
       </div>
 
       <div className="absolute bottom-0 asset z-10" />

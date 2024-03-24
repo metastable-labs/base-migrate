@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { useCookies } from 'react-cookie';
 import { getAccount } from '@wagmi/core';
+import useConnect from '@/hooks/useConnect';
 import { Network, supportedNetworks, wagmiConfig } from '@/config/rainbowkit';
 
-import useConnect from '@/hooks/useConnect';
 import { Button, ClickAnimation, Container } from '..';
 import {
   BetaIcon,
@@ -19,6 +19,7 @@ import {
 import useSystemFunctions from '@/hooks/useSystemFunctions';
 import SwitchNetwork from './switch-network';
 import MenuComponent from './menu';
+import DisconnectNetwork from './disconnect-network';
 
 const Header = () => {
   const { navigate, pathname } = useSystemFunctions();
@@ -28,6 +29,7 @@ const Header = () => {
   const [cookies] = useCookies(['authtoken']);
 
   const [showNetworks, setShowNetworks] = useState(false);
+  const [showDisconnect, setShowDisconnect] = useState(false);
   const [currentNetwork, setCurrentNetwork] = useState<Network>();
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -83,7 +85,9 @@ const Header = () => {
                     </div>
                   </ClickAnimation>
 
-                  <ClickAnimation classes="flex items-center gap-2">
+                  <ClickAnimation
+                    onClick={() => setShowDisconnect(true)}
+                    classes="flex items-center gap-2">
                     <MetamaskIcon />
                     <div>
                       <div className="text-[10px] md:text-xs text-black-250 font-medium">
@@ -110,6 +114,10 @@ const Header = () => {
 
       {isConnected && address && showNetworks && !isDisconnected && (
         <SwitchNetwork setShowNetworks={setShowNetworks} />
+      )}
+
+      {isConnected && address && showDisconnect && !isDisconnected && (
+        <DisconnectNetwork setShowNetworks={setShowDisconnect} />
       )}
 
       <MenuComponent isOpen={openMenu} setIsOpen={setOpenMenu} />
