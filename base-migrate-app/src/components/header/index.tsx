@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-import React, { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import React, { useState, useMemo } from 'react';
+import { useAccount, useChainId } from 'wagmi';
 import { useCookies } from 'react-cookie';
-import { getAccount } from '@wagmi/core';
 import useConnect from '@/hooks/useConnect';
-import { Network, supportedNetworks, wagmiConfig } from '@/config/rainbowkit';
+import { supportedNetworks } from '@/config/rainbowkit';
 
 import { Button, ClickAnimation, Container } from '..';
 import {
@@ -24,25 +23,23 @@ import DisconnectNetwork from './disconnect-network';
 const Header = () => {
   const { navigate, pathname } = useSystemFunctions();
   const { connectModal } = useConnect();
-  const { chainId } = getAccount(wagmiConfig);
+  const chainId = useChainId();
   const { isConnected, isDisconnected, address } = useAccount();
   const [cookies] = useCookies(['authtoken']);
 
   const [showNetworks, setShowNetworks] = useState(false);
   const [showDisconnect, setShowDisconnect] = useState(false);
-  const [currentNetwork, setCurrentNetwork] = useState<Network>();
   const [openMenu, setOpenMenu] = useState(false);
+
+  const currentNetwork = useMemo(() => {
+    const network = supportedNetworks.find((network) => network.chainId === chainId);
+
+    return network;
+  }, [chainId, showNetworks]);
 
   const authToken = cookies?.authtoken;
   const route = authToken && isConnected ? '/migrate' : '/home';
 
-  useEffect(() => {
-    if (chainId) {
-      const network = supportedNetworks.find((network) => network.chainId === chainId);
-
-      setCurrentNetwork(network);
-    }
-  }, [chainId, isConnected, isDisconnected, address]);
   return (
     <>
       <Container
@@ -51,14 +48,15 @@ const Header = () => {
         <header className="h-[11vh] flex items-center">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
-              <div className="hidden md:block">
-                <Logo />
-              </div>
-              <div className="md:hidden">
-                <SmallLogo />
-              </div>
-
-              <div className="text-xs md:text-xl text-black-100 font-medium">Base Migrate</div>
+              <ClickAnimation onClick={() => navigate.push('/')} classes="flex items-center gap-2">
+                <div className="hidden md:block">
+                  <Logo />
+                </div>
+                <div className="md:hidden">
+                  <SmallLogo />
+                </div>
+                <div className="text-xs md:text-xl text-black-100 font-medium">Base Migrate</div>
+              </ClickAnimation>
 
               <div className="ml-2.5 md:ml-5">
                 <BetaIcon />
