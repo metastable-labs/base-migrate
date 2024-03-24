@@ -6,6 +6,26 @@ import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import { baseSepolia, base } from 'wagmi/chains';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { BaseIcon } from '../../public/icons';
+
+export type Network = {
+  name: string;
+  icon: JSX.Element;
+  chainId: number;
+};
+
+export const supportedNetworks = [
+  {
+    name: 'Base',
+    icon: <BaseIcon />,
+    chainId: base.id,
+  },
+  {
+    name: 'Base Sepolia',
+    icon: <BaseIcon />,
+    chainId: baseSepolia.id,
+  },
+];
 
 export const wagmiConfig = getDefaultConfig({
   appName: process.env.NEXT_PUBLIC_APP_NAME!,
