@@ -58,7 +58,7 @@ const Header = () => {
 
               <div className="text-xs md:text-xl text-black-100 font-medium">Base Migrate</div>
 
-              <div className="ml-7 md:ml-16">
+              <div className="ml-2.5 md:ml-5">
                 <BetaIcon />
               </div>
             </div>

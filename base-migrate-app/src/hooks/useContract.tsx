@@ -12,11 +12,12 @@ const useContract = () => {
     hash,
   });
 
-  const sepoliaFactory = chainId === 84532 && MigrateFactory?.base_sepolia;
+  const factory =
+    chainId === 84532 ? MigrateFactory?.base_sepolia : chainId === 8453 && MigrateFactory.base;
 
   const deployToken = (remoteToken: string, tokenName: string, tokenSymbol: string) => {
     writeContract({
-      address: sepoliaFactory,
+      address: factory,
       abi: OptimismMintableERC20Factory.abi,
       functionName: 'createStandardL2Token',
       args: [remoteToken, tokenName, tokenSymbol],
