@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { motion } from 'framer-motion';
 import { useCookies } from 'react-cookie';
 import useConnect from '@/hooks/useConnect';
-import { getAccount } from '@wagmi/core';
 import { disconnect } from '@wagmi/core';
 
 import { CancelIcon, DisconnectIcon, DropdownIcon, MetamaskIcon } from '../../../public/icons';
@@ -22,7 +21,7 @@ const MenuComponent = ({ isOpen, setIsOpen }: IMenu) => {
   const { connectModal } = useConnect();
   const { navigate, pathname } = useSystemFunctions();
   const [cookies] = useCookies(['authtoken']);
-  const { chainId } = getAccount(wagmiConfig);
+  const chainId = useChainId();
 
   const [currentNetwork, setCurrentNetwork] = useState<Network>();
   const [showNetworks, setShowNetworks] = useState(false);

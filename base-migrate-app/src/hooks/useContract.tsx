@@ -1,11 +1,13 @@
 import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { getAccount, getTransactionReceipt } from '@wagmi/core';
+import { getTransactionReceipt } from '@wagmi/core';
+import { useChainId } from 'wagmi';
+
 import { wagmiConfig } from '@/config/rainbowkit';
 import MigrateFactory from '@/config/addresses';
 import OptimismMintableERC20Factory from '@/config/abis/OptimismMintableERC20Factory.json';
 
 const useContract = () => {
-  const { chainId } = getAccount(wagmiConfig);
+  const chainId = useChainId();
   const { data: hash, isPending, writeContract } = useWriteContract();
 
   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({

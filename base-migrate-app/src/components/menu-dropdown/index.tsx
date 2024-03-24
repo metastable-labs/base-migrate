@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-import React, { memo } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
 
@@ -31,4 +31,4 @@ const MenuDropdown = ({
   );
 };
 
-export default memo(MenuDropdown);
+export default MenuDropdown;

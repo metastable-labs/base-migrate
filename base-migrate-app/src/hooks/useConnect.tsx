@@ -1,14 +1,13 @@
 import { removeLocalStorage } from '@/app/utils/storage';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount, useSwitchChain } from 'wagmi';
-import { getAccount } from '@wagmi/core';
+import { useAccount, useSwitchChain, useChainId } from 'wagmi';
 import { wagmiConfig } from '@/config/rainbowkit';
 import { useEffect } from 'react';
 
 const useConnect = () => {
   const { openConnectModal } = useConnectModal();
   const { isConnected, isDisconnected, connector, address } = useAccount();
-  const { chainId } = getAccount(wagmiConfig);
+  const chainId = useChainId();
   const { switchChain } = useSwitchChain();
 
   const connectModal = () => {
