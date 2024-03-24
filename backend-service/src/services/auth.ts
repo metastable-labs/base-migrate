@@ -4,6 +4,14 @@ import { env } from '../common/config/env';
 
 export class AuthService {
   async githubAuth(code: string) {
+    console.log(
+      'code',
+      code,
+      env.github.url,
+      env.github.clientId,
+      env.github.clientSecret
+    );
+
     const response = await axios.post(
       `${env.github.url}/login/oauth/access_token`,
       {
@@ -25,9 +33,13 @@ export class AuthService {
       refresh_token_expires_in,
     } = response.data;
 
+    console.log('access_token', access_token);
+
     const octokit = new Octokit({ auth: access_token });
 
     const userInfo = await octokit.request('GET /user');
+
+    console.log('userInfo', userInfo);
 
     return {
       accessToken: access_token,
