@@ -12,6 +12,7 @@ export type Network = {
   name: string;
   icon: JSX.Element;
   chainId: number;
+  id: string;
 };
 
 export const supportedNetworks = [
@@ -19,11 +20,13 @@ export const supportedNetworks = [
     name: 'Base',
     icon: <BaseIcon />,
     chainId: base.id,
+    id: 'base',
   },
   {
     name: 'Base Sepolia',
     icon: <BaseIcon />,
     chainId: baseSepolia.id,
+    id: 'base-sepolia',
   },
 ];
 

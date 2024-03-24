@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import type { Viewport } from 'next';
 
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://asset.cloudinary.com/djzeufu4j/f9b441c38bf88c6d0671323af1bb45be',
+        url: 'https://res.cloudinary.com/djzeufu4j/image/upload/v1711129042/base_migrate_ufm9de.png',
         width: 1200,
         height: 630,
       },
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     description: 'Migrate ERC20 tokens to Base Network',
     images: [
       {
-        url: 'https://asset.cloudinary.com/djzeufu4j/f9b441c38bf88c6d0671323af1bb45be',
+        url: 'https://res.cloudinary.com/djzeufu4j/image/upload/v1711129042/base_migrate_ufm9de.png',
         width: 1200,
         height: 630,
       },
@@ -65,6 +66,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/** Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-KP3SGTMZQD"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'G-KP3SGTMZQD');
+        `}
+        </Script>
+
         <App>{children}</App>
       </body>
     </html>

@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import React from 'react';
-import { useSwitchChain } from 'wagmi';
-import { getAccount } from '@wagmi/core';
-import { supportedNetworks, wagmiConfig } from '@/config/rainbowkit';
+import { useSwitchChain, useChainId } from 'wagmi';
+import { supportedNetworks } from '@/config/rainbowkit';
 import classNames from 'classnames';
 import { MenuDropdown } from '..';
 
 const SwitchNetwork = ({ setShowNetworks }: { setShowNetworks: (val: boolean) => void }) => {
-  const { chainId } = getAccount(wagmiConfig);
+  const chainId = useChainId();
   const { switchChain } = useSwitchChain();
 
-  const switchNetwork = (chainId: number) => {
-    switchChain({ chainId });
+  const switchNetwork = async (chainId: number) => {
+    await switchChain({ chainId });
+    setShowNetworks(false);
   };
   return (
     <MenuDropdown onClick={() => setShowNetworks(false)}>
@@ -22,7 +22,6 @@ const SwitchNetwork = ({ setShowNetworks }: { setShowNetworks: (val: boolean) =>
             key={index}
             onClick={() => {
               switchNetwork(network.chainId);
-              setShowNetworks(false);
             }}
             className="flex items-center gap-4 cursor-pointer">
             {network.icon}
