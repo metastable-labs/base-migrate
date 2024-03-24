@@ -19,9 +19,5 @@ export const env = {
   chain: {
     username: envVar.get('CHAIN_GITHUB_USERNAME').required().asString(),
     repo: envVar.get('CHAIN_GITHUB_REPO').required().asString(),
-  },
-  etherscan: {
-    apiKey: envVar.get('ETHERSCAN_API_KEY').required().asString(),
-    apiUrl: envVar.get('ETHERSCAN_API_URL').required().asString(),
-  },
+  }
 };

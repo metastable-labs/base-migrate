@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/config/rainbowkit';
 import { useCookies } from 'react-cookie';
+import {trim} from 'viem'
 import { toast } from 'react-toastify';
 
 import StepHeader from './step-header';
@@ -66,8 +67,6 @@ function MigratePage() {
       if (isPending || !isConfirmed) return;
 
       const data = await getTransactionData();
-      //   console.log(data, 'tx data');
-      //   console.log('deployed token on base:', data?.logs[0].address);
 
       const body = {
         chainId,
@@ -84,7 +83,7 @@ function MigratePage() {
               address: formData.token_address,
             },
             base: {
-              address: data?.logs[0].address,
+              address: trim(data?.logs[0]?.topics[2]!),
             },
           },
         },
