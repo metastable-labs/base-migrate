@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://asset.cloudinary.com/djzeufu4j/f9b441c38bf88c6d0671323af1bb45be',
+        url: 'https://res.cloudinary.com/djzeufu4j/image/upload/v1711129042/base_migrate_ufm9de.png',
         width: 1200,
         height: 630,
       },
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description: 'Migrate ERC20 tokens to Base Network',
     images: [
       {
-        url: 'https://asset.cloudinary.com/djzeufu4j/f9b441c38bf88c6d0671323af1bb45be',
+        url: 'https://res.cloudinary.com/djzeufu4j/image/upload/v1711129042/base_migrate_ufm9de.png',
         width: 1200,
         height: 630,
       },
