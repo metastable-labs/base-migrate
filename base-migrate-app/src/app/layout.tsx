@@ -1,6 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import type { Viewport } from 'next';
+
 import App from './app';
 import './globals.css';
 
@@ -22,8 +24,6 @@ export const metadata: Metadata = {
   ],
   applicationName: 'Base Migrate',
   authors: [{ name: 'Justice Eziefule', url: 'https://github.com/meisterjustice' }],
-
-  themeColor: '#F1F2F6',
   openGraph: {
     title: 'Base Migrate',
     description: 'Migrate ERC20 tokens to Base Network',
@@ -51,6 +51,10 @@ export const metadata: Metadata = {
       },
     ],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#F1F2F6',
 };
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 /**
  *
@@ -11,12 +11,10 @@ import { usePathname, useSearchParams } from 'next/navigation';
 const useSystemFunctions = () => {
   const navigate = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   return {
     navigate,
     pathname,
-    searchParams,
   };
 };
 

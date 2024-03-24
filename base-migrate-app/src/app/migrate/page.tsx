@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, SyntheticEvent } from 'react';
 import classNames from 'classnames';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/config/rainbowkit';
@@ -37,10 +37,10 @@ function MigratePage() {
   const [pullRequestUrl, setPullRequestUrl] = useState('');
   const [cookies] = useCookies(['authtoken']);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setFormData((prevFormData: any) => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
@@ -50,7 +50,7 @@ function MigratePage() {
     setActiveStep((prev) => prev + 1);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     e.preventDefault();
 
     if (!cookies?.authtoken) {

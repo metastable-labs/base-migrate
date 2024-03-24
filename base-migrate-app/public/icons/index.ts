@@ -11,6 +11,10 @@ import CheckIcon from './check-icon.svg';
 import GoodIcon from './good-icon.svg';
 import LoadingIcon from './loading.svg';
 import LineIcon from './line.svg';
+import BetaIcon from './beta.svg';
+import CancelIcon from './cancel-icon.svg';
+import DisconnectIcon from './disconnect.svg';
+import MenuIcon from './menu-icon.svg';
 
 export {
   Logo,
@@ -26,4 +30,8 @@ export {
   GoodIcon,
   LoadingIcon,
   LineIcon,
+  BetaIcon,
+  CancelIcon,
+  DisconnectIcon,
+  MenuIcon,
 };
