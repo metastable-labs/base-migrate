@@ -60,11 +60,12 @@ const ConnectGithub = () => {
         type: 'success',
       });
       return navigate.push('/migrate');
-    } catch (error) {
-      console.error(error);
-      toast('An error occured! Please try again later', {
-        type: 'error',
-      });
+    } catch (error: any) {
+      if (error?.response?.status !== 401) {
+        toast('An error occured! Please try again later', {
+          type: 'error',
+        });
+      }
 
       if (!cookies?.isAuthenticated) {
         setCookie('isAuthenticated', true, {
