@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { getAccount } from '@wagmi/core';
-import { wagmiConfig } from '@/config/rainbowkit';
+import { wagmiConfig, supportedNetworks } from '@/config/rainbowkit';
 import { useCookies } from 'react-cookie';
 import { trim } from 'viem';
 import { toast } from 'react-toastify';
@@ -17,7 +17,7 @@ import { axiosInstance } from '@/utils/axios';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
 
 function MigratePage() {
-  const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
+  const { deployToken, isPending, isConfirmed, getTransactionData, error } = useContract();
   const { chainId } = getAccount(wagmiConfig);
   const { navigate } = useSystemFunctions();
 
@@ -58,7 +58,7 @@ function MigratePage() {
     }
 
     nextStep();
-
+    console.log('got here');
     deployToken(formData.token_address, formData.token_name, formData.token_symbol);
   };
 
@@ -68,7 +68,7 @@ function MigratePage() {
 
       const data = await getTransactionData();
 
-      const body = {
+      const body: any = {
         chainId,
         logoUrl: formData.logo,
         tokenData: {
@@ -82,17 +82,23 @@ function MigratePage() {
             ethereum: {
               address: formData.token_address,
             },
-            base: {
-              address: trim(data?.logs[0]?.topics[2]!),
-            },
           },
         },
       };
 
-      const response = await axiosInstance.post(`/migrate/token`, body);
+      const alternativeToken: any = await supportedNetworks.find(
+        (network) => network.chainId === chainId,
+      );
 
-      setPullRequestUrl(response?.data?.data?.pullRequestUrl);
-      setDone(true);
+      body.tokenData.tokens[alternativeToken.id!] = { address: trim(data?.logs[0]?.topics[2]!) };
+
+      if (!isConfirmed && isPending) {
+        const response = await axiosInstance.post(`/migrate/token`, body);
+        console.log(body, 'body being passed');
+
+        setPullRequestUrl(response?.data?.data?.pullRequestUrl);
+        setDone(true);
+      }
     } catch (error) {
       console.error(error);
       toast('An error occured! Please try again later', {
@@ -109,7 +115,12 @@ function MigratePage() {
 
   useEffect(() => {
     fetchData();
+    console.log(isPending, 'here');
   }, [isPending, isConfirmed]);
+
+  useEffect(() => {
+    console.log(error, 'error from write contract');
+  }, [error]);
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}

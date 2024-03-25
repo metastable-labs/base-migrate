@@ -48,30 +48,29 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (step === 0 && isPending && !isConfirmed) return;
+    if (step === 0 && isPending && !isConfirmed) return;
 
-      const newData = [...data];
+    const newData = [...data];
 
-      if (newData[step].status !== 'completed') {
-        newData[step].time = moment().format('h:mm a');
-        newData[step].status = 'completed';
-      }
-      if (step !== 4) {
-        newData[step + 1].status = 'pending';
-      }
+    if (newData[step].status !== 'completed') {
+      newData[step].time = moment().format('h:mm a');
+      newData[step].status = 'completed';
+    }
+    if (step !== 4) {
+      newData[step + 1].status = 'pending';
+    }
 
-      setData([...newData]);
+    console.log(newData, 'new data');
+    setData([...newData]);
 
-      //   setStep(step + 1);
+    //   setStep(step + 1);
 
-      if (step + 1 === 4) {
-        next();
-        toast('Migration complete', {
-          type: 'success',
-        });
-      }
-    }, 2500);
+    if (step + 1 === 4) {
+      next();
+      toast('Migration complete', {
+        type: 'success',
+      });
+    }
   }, [step, isPending]);
 
   useEffect(() => {
@@ -90,15 +89,13 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
     }
 
     if (isDone && step > 1) {
-      setTimeout(() => {
-        setStep(step + 1);
-      }, 3000);
+      setStep(step + 1);
     }
   }, [isDone, step, refresh]);
 
   return (
     <div className="flex flex-col gap-2">
-      {data.map((item, index) => (
+      {data?.map((item, index) => (
         <div key={index}>
           <div className="flex items-center justify-between bg-black-400 min-h-9 lg:min-h-10 rounded-[10px] p-2">
             <div className="flex items-center gap-3">
