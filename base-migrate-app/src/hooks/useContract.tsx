@@ -1,6 +1,11 @@
-import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import {
+  useWaitForTransactionReceipt,
+  useWriteContract,
+  useReadContracts,
+  useChainId,
+} from 'wagmi';
 import { getTransactionReceipt } from '@wagmi/core';
-import { useChainId } from 'wagmi';
+import { erc20Abi } from 'viem';
 
 import { wagmiConfig } from '@/config/rainbowkit';
 import MigrateFactory from '@/config/addresses';
@@ -10,6 +15,7 @@ import BasedERC20Factory from '@/config/abis/BasedERC20Factory.json';
 const useContract = () => {
   const chainId = useChainId();
   const { data: hash, isPending, writeContract, error } = useWriteContract();
+  const {} = useReadContracts();
 
   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash,
@@ -30,13 +36,38 @@ const useContract = () => {
         : [''];
 
   const deployToken = (remoteToken: string, tokenName: string, tokenSymbol: string) => {
-    console.log(remoteToken, 'here from remote token');
     writeContract({
       address: factory,
       abi: abiParam,
       functionName: funcName,
       args: [remoteToken, tokenName, tokenSymbol],
     });
+  };
+
+  const readTokenData = (tokenAddress: `0x${string}`) => {
+    const ERC20Contract = {
+      address: tokenAddress,
+      abi: erc20Abi,
+    } as const;
+
+    const result = useReadContracts({
+      contracts: [
+        {
+          ...ERC20Contract,
+          functionName: 'name',
+        },
+        {
+          ...ERC20Contract,
+          functionName: 'symbol',
+        },
+        {
+          ...ERC20Contract,
+          functionName: 'decimals',
+        },
+      ],
+    });
+    console.log(result, 'result');
+    return result;
   };
 
   const getTransactionData = () => {
@@ -53,6 +84,7 @@ const useContract = () => {
     isConfirmed,
     getTransactionData,
     error,
+    readTokenData,
   };
 };
 
