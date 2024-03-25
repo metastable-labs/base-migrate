@@ -64,7 +64,7 @@ function MigratePage() {
 
   const fetchData = async () => {
     try {
-      if (isPending && !isConfirmed) return;
+      if (isPending || !isConfirmed) return;
 
       const data = await getTransactionData();
 
@@ -116,7 +116,7 @@ function MigratePage() {
 
   useEffect(() => {
     fetchData();
-  }, [!isPending]);
+  }, [isPending]);
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}
