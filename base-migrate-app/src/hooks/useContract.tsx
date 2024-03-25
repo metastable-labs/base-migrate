@@ -15,7 +15,6 @@ import BasedERC20Factory from '@/config/abis/BasedERC20Factory.json';
 const useContract = () => {
   const chainId = useChainId();
   const { data: hash, isPending, writeContract, error } = useWriteContract();
-  const {} = useReadContracts();
 
   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash,
@@ -44,32 +43,6 @@ const useContract = () => {
     });
   };
 
-  const readTokenData = (tokenAddress: `0x${string}`) => {
-    const ERC20Contract = {
-      address: tokenAddress,
-      abi: erc20Abi,
-    } as const;
-
-    const result = useReadContracts({
-      contracts: [
-        {
-          ...ERC20Contract,
-          functionName: 'name',
-        },
-        {
-          ...ERC20Contract,
-          functionName: 'symbol',
-        },
-        {
-          ...ERC20Contract,
-          functionName: 'decimals',
-        },
-      ],
-    });
-    console.log(result, 'result');
-    return result;
-  };
-
   const getTransactionData = () => {
     let transactionData;
     if (hash) {
@@ -84,7 +57,6 @@ const useContract = () => {
     isConfirmed,
     getTransactionData,
     error,
-    readTokenData,
   };
 };
 
