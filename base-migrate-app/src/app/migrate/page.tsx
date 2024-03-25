@@ -64,9 +64,11 @@ function MigratePage() {
 
   const fetchData = async () => {
     try {
-      if (isPending || !isConfirmed) return;
+      if (isPending && !isConfirmed) return;
 
       const data = await getTransactionData();
+
+      console.log(data, 'tx data');
 
       const body: any = {
         chainId,
@@ -90,6 +92,8 @@ function MigratePage() {
         (network) => network.chainId === chainId,
       );
 
+      console.log(alternativeToken, 'alt tooken here');
+
       body.tokenData.tokens[alternativeToken.id!] = { address: trim(data?.logs[0]?.topics[2]!) };
 
       const response = await axiosInstance.post(`/migrate/token`, body);
@@ -112,7 +116,7 @@ function MigratePage() {
 
   useEffect(() => {
     fetchData();
-  }, [isPending, isConfirmed]);
+  }, [!isPending]);
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}
