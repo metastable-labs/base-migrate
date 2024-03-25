@@ -22,6 +22,7 @@ export class AuthController {
         data: response,
       });
     } catch (error) {
+      console.log('AuthController -> githubAuth -> error', error);
       return res.status(error.status).json({
         message: error.message,
         statusCode: error.status,
@@ -47,6 +48,7 @@ export class AuthController {
         data: response,
       });
     } catch (error) {
+      console.log('AuthController -> getSession -> error', error);
       return res.status(error.status).json({
         message: error.message,
         statusCode: error.status,
