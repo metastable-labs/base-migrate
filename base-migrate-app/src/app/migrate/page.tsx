@@ -1,8 +1,8 @@
 'use client';
-import React, { useEffect, useState, SyntheticEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { useChainId } from 'wagmi';
-import { supportedNetworks } from '@/config/rainbowkit';
+import { getAccount } from '@wagmi/core';
+import { wagmiConfig } from '@/config/rainbowkit';
 import { useCookies } from 'react-cookie';
 import { trim } from 'viem';
 import { toast } from 'react-toastify';
@@ -18,7 +18,7 @@ import useSystemFunctions from '@/hooks/useSystemFunctions';
 
 function MigratePage() {
   const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
-  const chainId = useChainId();
+  const { chainId } = getAccount(wagmiConfig);
   const { navigate } = useSystemFunctions();
 
   const [activeStep, setActiveStep] = useState(0);
@@ -37,10 +37,10 @@ function MigratePage() {
   const [pullRequestUrl, setPullRequestUrl] = useState('');
   const [cookies] = useCookies(['authtoken']);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
 
-    setFormData((prevFormData) => ({
+    setFormData((prevFormData: any) => ({
       ...prevFormData,
       [name]: value,
     }));
@@ -50,7 +50,7 @@ function MigratePage() {
     setActiveStep((prev) => prev + 1);
   };
 
-  const handleSubmit = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
 
     if (!cookies?.authtoken) {
@@ -68,9 +68,7 @@ function MigratePage() {
 
       const data = await getTransactionData();
 
-      console.log(data, 'tx data');
-
-      const body: any = {
+      const body = {
         chainId,
         logoUrl: formData.logo,
         tokenData: {
@@ -84,17 +82,12 @@ function MigratePage() {
             ethereum: {
               address: formData.token_address,
             },
+            base: {
+              address: trim(data?.logs[0]?.topics[2]!),
+            },
           },
         },
       };
-
-      const alternativeToken: any = await supportedNetworks.find(
-        (network) => network.chainId === chainId,
-      );
-
-      console.log(alternativeToken, 'alt tooken here');
-
-      body.tokenData.tokens[alternativeToken.id!] = { address: trim(data?.logs[0]?.topics[2]!) };
 
       const response = await axiosInstance.post(`/migrate/token`, body);
 
@@ -116,7 +109,7 @@ function MigratePage() {
 
   useEffect(() => {
     fetchData();
-  }, [isPending]);
+  }, [isPending, isConfirmed]);
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}
