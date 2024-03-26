@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { getAccount } from '@wagmi/core';
-import { wagmiConfig, supportedNetworks } from '@/config/rainbowkit';
+import { useChainId } from 'wagmi';
+import { supportedNetworks } from '@/config/rainbowkit';
 import { useCookies } from 'react-cookie';
 import { trim } from 'viem';
 import { toast } from 'react-toastify';
@@ -19,7 +19,7 @@ import readTokenData from '../utils/read-contract';
 
 function MigratePage() {
   const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
-  const { chainId } = getAccount(wagmiConfig);
+  const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
   const [activeStep, setActiveStep] = useState(0);
@@ -67,7 +67,7 @@ function MigratePage() {
         deployToken(token_address, tokenData.name, tokenData.symbol);
       }
     } catch (e) {
-      console.log('jdkjhkjhkjhjkjkh', e);
+      console.log('err', e);
     }
   };
 
@@ -99,10 +99,10 @@ function MigratePage() {
         const alternativeToken: any = await supportedNetworks.find(
           (network) => network.chainId === chainId,
         );
-        console.log(data?.logs);
-        return;
 
-        body.tokenData.tokens[alternativeToken.id!] = { address: trim(data?.logs[1]?.topics[2]!) };
+        const deployedToken = data?.logs[chainId === 84532 ? 1 : 0]?.topics[2];
+
+        body.tokenData.tokens[alternativeToken.id!] = { address: trim(deployedToken!) };
 
         const response = await axiosInstance.post(`/migrate/token`, body);
 

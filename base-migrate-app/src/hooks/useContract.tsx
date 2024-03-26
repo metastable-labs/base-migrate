@@ -1,11 +1,5 @@
-import {
-  useWaitForTransactionReceipt,
-  useWriteContract,
-  useReadContracts,
-  useChainId,
-} from 'wagmi';
+import { useWaitForTransactionReceipt, useWriteContract, useChainId } from 'wagmi';
 import { getTransactionReceipt } from '@wagmi/core';
-import { erc20Abi } from 'viem';
 
 import { wagmiConfig } from '@/config/rainbowkit';
 import MigrateFactory from '@/config/addresses';

@@ -74,7 +74,7 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
         });
       }
     }, 3500);
-  }, [step, isPending, isConfirmed]);
+  }, [step]);
 
   useEffect(() => {
     if (refresh) {
