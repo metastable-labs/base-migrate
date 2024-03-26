@@ -18,7 +18,8 @@ import useSystemFunctions from '@/hooks/useSystemFunctions';
 import readTokenData from '../utils/read-contract';
 
 function MigratePage() {
-  const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
+  const { deployToken, isPending, isConfirmed, getTransactionData, deployTokenWithDecimal } =
+    useContract();
   const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
@@ -57,14 +58,18 @@ function MigratePage() {
     try {
       e.preventDefault();
 
-      if (!cookies?.authtoken) {
-        return navigate.push('/home');
-      }
+      // if (!cookies?.authtoken) {
+      //   return navigate.push('/home');
+      // }
 
       nextStep();
 
-      if (token_address) {
-        deployToken(token_address, tokenData.name, tokenData.symbol);
+      // if (token_address && tokenData.decimal === '18') {
+      //   deployToken(token_address, tokenData.name, tokenData.symbol);
+      // }
+      console.log('got here');
+      if (token_address && tokenData.decimal !== '18' && chainId === 8453) {
+        deployTokenWithDecimal(token_address, tokenData.name, tokenData.symbol, tokenData.decimal);
       }
     } catch (e) {
       //

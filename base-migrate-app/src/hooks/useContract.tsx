@@ -5,6 +5,7 @@ import { wagmiConfig } from '@/config/rainbowkit';
 import MigrateFactory from '@/config/addresses';
 import OptimismMintableERC20Factory from '@/config/abis/OptimismMintableERC20Factory.json';
 import BasedERC20Factory from '@/config/abis/BasedERC20Factory.json';
+import BasedERC20FactoryMain from '@/config/abis/BasedERC20FactoryMain.json';
 
 const useContract = () => {
   const chainId = useChainId();
@@ -37,6 +38,20 @@ const useContract = () => {
     });
   };
 
+  const deployTokenWithDecimal = (
+    remoteToken: string,
+    tokenName: string,
+    tokenSymbol: string,
+    tokenDecimal: string,
+  ) => {
+    writeContract({
+      address: MigrateFactory.based_migrate_factory,
+      abi: BasedERC20FactoryMain.abi,
+      functionName: funcName,
+      args: [remoteToken, tokenName, tokenSymbol, Number(tokenDecimal)],
+    });
+  };
+
   const getTransactionData = () => {
     let transactionData;
     if (hash) {
@@ -50,6 +65,7 @@ const useContract = () => {
     isPending,
     isConfirmed,
     getTransactionData,
+    deployTokenWithDecimal,
     error,
   };
 };
