@@ -5,6 +5,7 @@ import { useAccount, useChainId } from 'wagmi';
 import { useCookies } from 'react-cookie';
 import useConnect from '@/hooks/useConnect';
 import { supportedNetworks } from '@/config/rainbowkit';
+import Base64ToSvg from '../Base64';
 
 import { Button, ClickAnimation, Container } from '..';
 import {
@@ -19,10 +20,11 @@ import useSystemFunctions from '@/hooks/useSystemFunctions';
 import SwitchNetwork from './switch-network';
 import MenuComponent from './menu';
 import DisconnectNetwork from './disconnect-network';
+import Image from 'next/image';
 
 const Header = () => {
   const { navigate, pathname } = useSystemFunctions();
-  const { connectModal } = useConnect();
+  const { connectModal, connector } = useConnect();
   const chainId = useChainId();
   const { isConnected, isDisconnected, address } = useAccount();
   const [cookies] = useCookies(['authtoken']);
@@ -86,10 +88,10 @@ const Header = () => {
                   <ClickAnimation
                     onClick={() => setShowDisconnect(true)}
                     classes="flex items-center gap-2">
-                    <MetamaskIcon />
+                    {connector?.icon && <img src={connector?.icon} />}
                     <div>
                       <div className="text-[10px] md:text-xs text-black-250 font-medium">
-                        Metamask
+                        {connector?.name && connector.name}
                       </div>
                       <div className="text-[10px] md:text-xs text-black-350 mt-0.5">
                         {address.slice(0, 6)}...{address.slice(-4)}

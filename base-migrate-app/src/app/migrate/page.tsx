@@ -67,7 +67,7 @@ function MigratePage() {
         deployToken(token_address, tokenData.name, tokenData.symbol);
       }
     } catch (e) {
-      console.log('err', e);
+      console.log('jdkjhkjhkjhjkjkh', e);
     }
   };
 

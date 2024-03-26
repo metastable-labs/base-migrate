@@ -35,6 +35,7 @@ const useConnect = () => {
 
   return {
     connectModal,
+    connector,
   };
 };
 
