@@ -33,7 +33,7 @@ const ConnectGithub = () => {
 
   const url = !cookies?.isAuthenticated
     ? 'https://github.com/apps/base-migrate/installations/new'
-    : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_url=http://localhost:3000/home';
+    : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_uri=http://localhost:3000/home';
 
   const setup = async () => {
     try {
@@ -84,7 +84,7 @@ const ConnectGithub = () => {
       return navigate.push('/');
     }
     setup();
-  }, [code]);
+  }, []);
 
   return (
     <>

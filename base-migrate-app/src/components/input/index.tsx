@@ -19,20 +19,6 @@ const Input = (props: InputType) => {
       return;
     }
 
-    // Check if the input is a valid number (without decimals)
-    const isNumberMatch = value.match(/^\d+$/);
-
-    if (isNumberMatch && isNaN(Number(value))) return;
-
-    // Check if the input is a valid Ethereum wallet address
-    const isAddressMatch = value.match(/^0x[a-fA-F0-9]{40}$/);
-
-    if (isNumberMatch || isAddressMatch) {
-      setValue(value);
-      onChange && onChange(e);
-      return;
-    }
-
     // Allow any text input
     setValue(value);
     onChange && onChange(e);

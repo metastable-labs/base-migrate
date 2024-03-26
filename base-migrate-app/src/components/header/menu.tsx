@@ -60,7 +60,7 @@ const MenuComponent = ({ isOpen, setIsOpen }: IMenu) => {
         type: 'spring',
         stiffness: 60,
       }}
-      className="fixed inset-0 bg-white-50 z-50 min-h-screen flex flex-col justify-between w-full py-10 px-6">
+      className="fixed inset-0 bg-white-50 z-50  flex flex-col justify-between w-full py-10 px-6">
       <div>
         <div>
           <div className="flex justify-between items-center">

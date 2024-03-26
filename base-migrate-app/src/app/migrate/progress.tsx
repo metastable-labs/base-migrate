@@ -49,7 +49,9 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
 
   useEffect(() => {
     setTimeout(() => {
-      if (step === 0 && isPending && !isConfirmed) return;
+      if (isPending || !isConfirmed) return;
+
+      if (step === 3 && !isDone) return;
 
       const newData = [...data];
 
@@ -63,7 +65,7 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
 
       setData([...newData]);
 
-      //   setStep(step + 1);
+      setStep(step + 1);
 
       if (step + 1 === 4) {
         next();
@@ -71,16 +73,8 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
           type: 'success',
         });
       }
-    }, 2500);
-  }, [step, isPending]);
-
-  useEffect(() => {
-    if (isConfirmed && !isPending && step < 2) {
-      setTimeout(() => {
-        setStep(step + 1);
-      }, 2000);
-    }
-  }, [isPending, isConfirmed, step]);
+    }, 3500);
+  }, [step]);
 
   useEffect(() => {
     if (refresh) {
@@ -88,17 +82,11 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
       setStep(0);
       return;
     }
-
-    if (isDone && step > 1) {
-      setTimeout(() => {
-        setStep(step + 1);
-      }, 3000);
-    }
-  }, [isDone, step, refresh]);
+  }, [refresh]);
 
   return (
     <div className="flex flex-col gap-2">
-      {data.map((item, index) => (
+      {data?.map((item, index) => (
         <div key={index}>
           <div className="flex items-center justify-between bg-black-400 min-h-9 lg:min-h-10 rounded-[10px] p-2">
             <div className="flex items-center gap-3">

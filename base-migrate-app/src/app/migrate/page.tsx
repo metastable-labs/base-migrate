@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { getAccount } from '@wagmi/core';
-import { wagmiConfig } from '@/config/rainbowkit';
+import { useChainId } from 'wagmi';
+import { supportedNetworks } from '@/config/rainbowkit';
 import { useCookies } from 'react-cookie';
 import { trim } from 'viem';
 import { toast } from 'react-toastify';
@@ -15,25 +15,24 @@ import MigrationProgress from './progress';
 import useContract from '@/hooks/useContract';
 import { axiosInstance } from '@/utils/axios';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
+import readTokenData from '../utils/read-contract';
 
 function MigratePage() {
   const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
-  const { chainId } = getAccount(wagmiConfig);
+  const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
-    token_name: '',
-    token_symbol: '',
-    token_decimal: '',
     token_description: '',
-    token_address: '',
     logo: '',
     website: '',
     twitter: '',
   });
   const [refresh, setRefresh] = useState(false);
   const [done, setDone] = useState(false);
+  const [token_address, setTokenAddress] = useState<`0x${string}`>();
+  const [tokenData, setTokenData] = useState({ decimal: '', name: '', symbol: '' });
   const [pullRequestUrl, setPullRequestUrl] = useState('');
   const [cookies] = useCookies(['authtoken']);
 
@@ -46,20 +45,30 @@ function MigratePage() {
     }));
   };
 
+  const handleAddressChange = (e: any) => {
+    setTokenAddress(e.target.value);
+  };
+
   const nextStep = () => {
     setActiveStep((prev) => prev + 1);
   };
 
   const handleSubmit = (e: any) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    if (!cookies?.authtoken) {
-      return navigate.push('/home');
+      if (!cookies?.authtoken) {
+        return navigate.push('/home');
+      }
+
+      nextStep();
+
+      if (token_address) {
+        deployToken(token_address, tokenData.name, tokenData.symbol);
+      }
+    } catch (e) {
+      console.log('jdkjhkjhkjhjkjkh', e);
     }
-
-    nextStep();
-
-    deployToken(formData.token_address, formData.token_name, formData.token_symbol);
   };
 
   const fetchData = async () => {
@@ -68,33 +77,39 @@ function MigratePage() {
 
       const data = await getTransactionData();
 
-      const body = {
-        chainId,
-        logoUrl: formData.logo,
-        tokenData: {
-          name: formData.token_name,
-          symbol: formData.token_symbol,
-          decimals: formData.token_decimal,
-          description: formData.token_description,
-          website: formData.website,
-          twitter: formData.twitter,
-          tokens: {
-            ethereum: {
-              address: formData.token_address,
-            },
-            base: {
-              address: trim(data?.logs[0]?.topics[2]!),
+      if (data?.status == 'success') {
+        const body: any = {
+          chainId,
+          logoUrl: formData.logo,
+          tokenData: {
+            name: tokenData?.name,
+            symbol: tokenData?.symbol,
+            decimals: tokenData?.decimal,
+            description: formData.token_description,
+            website: formData.website,
+            twitter: formData.twitter,
+            tokens: {
+              ethereum: {
+                address: token_address,
+              },
             },
           },
-        },
-      };
+        };
 
-      const response = await axiosInstance.post(`/migrate/token`, body);
+        const alternativeToken: any = await supportedNetworks.find(
+          (network) => network.chainId === chainId,
+        );
 
-      setPullRequestUrl(response?.data?.data?.pullRequestUrl);
-      setDone(true);
+        const deployedToken = data?.logs[chainId === 84532 ? 1 : 0]?.topics[2];
+
+        body.tokenData.tokens[alternativeToken.id!] = { address: trim(deployedToken!) };
+
+        const response = await axiosInstance.post(`/migrate/token`, body);
+
+        setPullRequestUrl(response?.data?.data?.pullRequestUrl);
+        setDone(true);
+      }
     } catch (error) {
-      console.error(error);
       toast('An error occured! Please try again later', {
         type: 'error',
       });
@@ -107,9 +122,44 @@ function MigratePage() {
     }
   };
 
+  const fetchTokenData = async () => {
+    // Check if the input is a valid Ethereum wallet address
+    const isAddressMatch = token_address?.match(/^0x[a-fA-F0-9]{40}$/);
+    if (isAddressMatch) {
+      try {
+        const res = await readTokenData(token_address!);
+        setTokenData({
+          name: res.name,
+          symbol: res.symbol,
+          decimal: res.decimal.toString(), // Convert number to string to match expected type
+        });
+      } catch (err) {
+        console.log(chainId);
+        toast(
+          `Invalid address: Address must be a valid token contract on ${chainId === 8453 ? 'Ethereum(L1)' : 'Sepolia'}`,
+          {
+            type: 'error',
+          },
+        );
+      }
+    } else {
+      setTokenData({
+        name: '',
+        symbol: '',
+        decimal: '',
+      }); // Clear data if address is invalid
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, [isPending, isConfirmed]);
+
+  useEffect(() => {
+    if (token_address) {
+      fetchTokenData();
+    }
+  }, [token_address]);
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}
@@ -132,34 +182,47 @@ function MigratePage() {
                 <>
                   <div>
                     <Input
-                      name="token_name"
-                      label="Token Name"
-                      placeholder="DAI Stablecoin"
-                      onChange={handleChange}
-                      value={formData.token_name}
+                      name="token_address"
+                      label="Token Address on Ethereum(L1)"
+                      placeholder="Token address"
+                      onChange={handleAddressChange}
+                      value={token_address}
                       required
                     />
                   </div>
-                  <div>
-                    <Input
-                      name="token_symbol"
-                      label="Token Symbol"
-                      placeholder="$DAI"
-                      onChange={handleChange}
-                      value={formData.token_symbol}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      name="token_decimal"
-                      label="Token Decimal"
-                      placeholder="18"
-                      onChange={handleChange}
-                      value={formData.token_decimal}
-                      required
-                    />
-                  </div>
+                  {tokenData.name !== '' ? (
+                    <div className="w-full px-3">
+                      <div className="w-full px-6 py-3 bg-neutral-50 rounded-[10px] border border-zinc-200 flex-col justify-start items-start gap-6 inline-flex">
+                        <div className="flex-col justify-start items-start gap-[7px] flex">
+                          <div className="text-neutral-900 text-sm font-medium leading-tight">
+                            Token Name
+                          </div>
+                          <div className="text-blue-700 text-xl font-normal leading-[29px]">
+                            {tokenData.name}
+                          </div>
+                        </div>
+                        <div className="flex-col justify-start items-start gap-[7px] flex">
+                          <div className="text-neutral-900 text-sm font-medium leading-tight">
+                            Token Symbol
+                          </div>
+                          <div className="text-blue-700 text-xl font-normal leading-[29px]">
+                            {tokenData.symbol}
+                          </div>
+                        </div>
+                        <div className="flex-col justify-start items-start gap-[7px] flex">
+                          <div className="text-neutral-900 text-sm font-medium leading-tight">
+                            Token Decimal
+                          </div>
+                          <div className="text-blue-700 text-xl font-normal leading-[29px]">
+                            {tokenData.decimal}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+
                   <div>
                     <Input
                       name="token_description"
@@ -171,18 +234,14 @@ function MigratePage() {
                       required
                     />
                   </div>
-                  <div>
-                    <Input
-                      name="token_address"
-                      label="Token Address on Ethereum(L1)"
-                      placeholder="Token address"
-                      onChange={handleChange}
-                      value={formData.token_address}
-                      required
-                    />
-                  </div>
+
                   <div className="py-6 flex flex-col justify-center items-center">
-                    <Button onClick={nextStep} variant="tertiary" text={'Next'} />
+                    <Button
+                      disabled={!token_address || !formData.token_description}
+                      onClick={nextStep}
+                      variant="tertiary"
+                      text={'Next'}
+                    />
                   </div>
                 </>
               )}
@@ -219,7 +278,12 @@ function MigratePage() {
                   </div>
 
                   <div className="py-6 flex flex-col justify-center items-center">
-                    <Button type="submit" variant="tertiary" text={'Migrate to Base'} />
+                    <Button
+                      disabled={!formData.logo}
+                      type="submit"
+                      variant="tertiary"
+                      text={'Migrate to Base'}
+                    />
                   </div>
                 </>
               )}
