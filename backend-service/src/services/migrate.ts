@@ -5,8 +5,18 @@ import { MigrateTokenDto } from '../dtos/migrate';
 
 import { env } from '../common/config/env';
 import { Token } from '../common/interfaces/index.interface';
+import { DB } from '../common/helpers/db';
+
+interface GitHubFileContentResponse {
+  sha: string;
+}
 
 export class MigrateService {
+  private db: DB;
+  constructor() {
+    this.db = new DB();
+  }
+
   async migrateToken(body: MigrateTokenDto, accessToken: string) {
     const octokit = new Octokit({ auth: accessToken });
 
@@ -19,6 +29,16 @@ export class MigrateService {
     await this.addToken(octokit, owner, repo, body.tokenData, logoUrl);
 
     const pullRequestUrl = `${env.github.url}/${env.chain.username}/${repo}/compare/master...${owner}:${repo}:master`;
+    const address =
+      body.tokenData.tokens?.ethereum?.address ??
+      body.tokenData.tokens?.sepolia?.address;
+
+    body.tokenData = {
+      ...body.tokenData,
+      pullRequestUrl,
+    };
+
+    await this.db.createOrUpdate(body.tokenData, address);
 
     return {
       pullRequestUrl,
@@ -92,9 +112,6 @@ export class MigrateService {
     message: string
   ) {
     const res = await this.getFileSHA(octokit, owner, repo, path);
-    if (res) {
-      return;
-    }
 
     const response = await octokit.request(
       'PUT /repos/{owner}/{repo}/contents/{path}',
@@ -104,6 +121,7 @@ export class MigrateService {
         path,
         message,
         content,
+        sha: res ? res.sha : undefined,
       }
     );
 
@@ -142,15 +160,11 @@ export class MigrateService {
   }
 
   async fetchAndEncodeImage(url: string) {
-    try {
-      const response = await axios.get(url, {
-        responseType: 'arraybuffer',
-      });
-      const buffer = Buffer.from(response.data, 'binary');
-      return buffer.toString('base64');
-    } catch (error) {
-      throw error;
-    }
+    const response = await axios.get(url, {
+      responseType: 'arraybuffer',
+    });
+    const buffer = Buffer.from(response.data, 'binary');
+    return buffer.toString('base64');
   }
 
   async getFileSHA(
@@ -158,7 +172,7 @@ export class MigrateService {
     owner: string,
     repo: string,
     path: string
-  ) {
+  ): Promise<GitHubFileContentResponse | null> {
     try {
       const response = await octokit.request(
         'GET /repos/{owner}/{repo}/contents/{path}',
@@ -169,7 +183,7 @@ export class MigrateService {
         }
       );
 
-      return response.data;
+      return response.data as GitHubFileContentResponse;
     } catch (error) {
       return null;
     }
