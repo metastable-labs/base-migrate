@@ -236,7 +236,12 @@ function MigratePage() {
                   </div>
 
                   <div className="py-6 flex flex-col justify-center items-center">
-                    <Button onClick={nextStep} variant="tertiary" text={'Next'} />
+                    <Button
+                      disabled={!token_address || !formData.token_description}
+                      onClick={nextStep}
+                      variant="tertiary"
+                      text={'Next'}
+                    />
                   </div>
                 </>
               )}
@@ -273,7 +278,12 @@ function MigratePage() {
                   </div>
 
                   <div className="py-6 flex flex-col justify-center items-center">
-                    <Button type="submit" variant="tertiary" text={'Migrate to Base'} />
+                    <Button
+                      disabled={!formData.logo}
+                      type="submit"
+                      variant="tertiary"
+                      text={'Migrate to Base'}
+                    />
                   </div>
                 </>
               )}
