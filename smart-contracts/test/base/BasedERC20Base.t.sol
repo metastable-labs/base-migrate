@@ -16,6 +16,7 @@ contract BasedERC20Base is Test {
 
     string public tokenName = "BeBased";
     string public tokenSymbol = "BeBased";
+    uint8 tokenDecimal = 18;
     string public currentVersion = "1.0.0";
 
     function setUp() public {
@@ -30,7 +31,7 @@ contract BasedERC20Base is Test {
     }
 
     modifier initializeBasedERC20() {
-        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol);
+        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol, tokenDecimal);
         _;
     }
 }

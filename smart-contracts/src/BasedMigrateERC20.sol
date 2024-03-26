@@ -35,6 +35,9 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
      */
     address public BRIDGE;
 
+    /// @notice Decimals of the token
+    uint8 private DECIMALS;
+
     /**
      * @notice Emitted whenever tokens are minted for an account.
      *
@@ -74,13 +77,17 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
      * @param _name        ERC20 name.
      * @param _symbol      ERC20 symbol.
      */
-    function initialize(address _bridge, address _remoteToken, string memory _name, string memory _symbol)
-        external
-        initializer
-    {
+    function initialize(
+        address _bridge,
+        address _remoteToken,
+        string memory _name,
+        string memory _symbol,
+        uint8 _decimals
+    ) external initializer {
         __ERC20_init(_name, _symbol);
         REMOTE_TOKEN = _remoteToken;
         BRIDGE = _bridge;
+        DECIMALS = _decimals;
     }
 
     /**
@@ -93,8 +100,8 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
         external
         virtual
         override(IOptimismMintableERC20, ILegacyMintableERC20)
+        onlyBridge
     {
-        _requireBridge();
         _mint(_to, _amount);
         emit Mint(_to, _amount);
     }
@@ -109,8 +116,8 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
         external
         virtual
         override(IOptimismMintableERC20, ILegacyMintableERC20)
+        onlyBridge
     {
-        _requireBridge();
         _burn(_from, _amount);
         emit Burn(_from, _amount);
     }
@@ -162,14 +169,20 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
     function bridge() public view returns (address) {
         return BRIDGE;
     }
+    /// @dev Returns the number of decimals used to get its user representation.
+    /// For example, if `decimals` equals `2`, a balance of `505` tokens should
+    /// be displayed to a user as `5.05` (`505 / 10 ** 2`).
+    /// NOTE: This information is only used for _display_ purposes: it in
+    /// no way affects any of the arithmetic of the contract, including
+    /// {IERC20-balanceOf} and {IERC20-transfer}.
 
-    /**
-     * @dev Ensures that the function is only called by the bridge contract.
-     * Replaces the `onlyBridge` modifier
-     * It checks if the `msg.sender` is the `BRIDGE` address and reverts with `OnlyBridgeAllowed`
-     * if it is not.
-     */
-    function _requireBridge() internal view {
-        if (msg.sender != BRIDGE) revert OnlyBridgeAllowed();
+    function decimals() public view override returns (uint8) {
+        return DECIMALS;
+    }
+
+    /// @notice A modifier that only allows the bridge to call
+    modifier onlyBridge() {
+        require(msg.sender == BRIDGE, "OptimismMintableERC20: only bridge can mint and burn");
+        _;
     }
 }
