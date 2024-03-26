@@ -31,4 +31,5 @@ export interface Token {
       address: string;
     };
   };
+  pullRequestUrl?: string;
 }
