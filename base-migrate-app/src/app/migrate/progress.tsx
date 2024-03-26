@@ -48,38 +48,33 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    if (step === 0 && isPending && !isConfirmed) return;
+    setTimeout(() => {
+      if (isPending || !isConfirmed) return;
 
-    const newData = [...data];
+      if (step === 3 && !isDone) return;
 
-    if (newData[step].status !== 'completed') {
-      newData[step].time = moment().format('h:mm a');
-      newData[step].status = 'completed';
-    }
-    if (step !== 4) {
-      newData[step + 1].status = 'pending';
-    }
+      const newData = [...data];
 
-    console.log(newData, 'new data');
-    setData([...newData]);
+      if (newData[step].status !== 'completed') {
+        newData[step].time = moment().format('h:mm a');
+        newData[step].status = 'completed';
+      }
+      if (step !== 4) {
+        newData[step + 1].status = 'pending';
+      }
 
-    //   setStep(step + 1);
+      setData([...newData]);
 
-    if (step + 1 === 4) {
-      next();
-      toast('Migration complete', {
-        type: 'success',
-      });
-    }
-  }, [step, isPending]);
+      setStep(step + 1);
 
-  useEffect(() => {
-    if (isConfirmed && !isPending && step < 2) {
-      setTimeout(() => {
-        setStep(step + 1);
-      }, 2000);
-    }
-  }, [isPending, isConfirmed, step]);
+      if (step + 1 === 4) {
+        next();
+        toast('Migration complete', {
+          type: 'success',
+        });
+      }
+    }, 3500);
+  }, [step, isPending, isConfirmed]);
 
   useEffect(() => {
     if (refresh) {
@@ -87,11 +82,7 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
       setStep(0);
       return;
     }
-
-    if (isDone && step > 1) {
-      setStep(step + 1);
-    }
-  }, [isDone, step, refresh]);
+  }, [refresh]);
 
   return (
     <div className="flex flex-col gap-2">

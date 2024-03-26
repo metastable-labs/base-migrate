@@ -43,8 +43,6 @@ const ConnectGithub = () => {
 
       const response = await axiosInstance.get(`/auth/github?code=${code}`);
 
-      console.log(response, 'response here');
-
       const data: ResponseProp = response.data?.data;
 
       setCookie('authtoken', data?.accessToken, {
@@ -86,7 +84,7 @@ const ConnectGithub = () => {
       return navigate.push('/');
     }
     setup();
-  });
+  }, []);
 
   return (
     <>

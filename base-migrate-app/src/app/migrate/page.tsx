@@ -54,16 +54,20 @@ function MigratePage() {
   };
 
   const handleSubmit = (e: any) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    if (!cookies?.authtoken) {
-      return navigate.push('/home');
-    }
+      if (!cookies?.authtoken) {
+        return navigate.push('/home');
+      }
 
-    nextStep();
+      nextStep();
 
-    if (token_address) {
-      deployToken(token_address, tokenData.name, tokenData.symbol);
+      if (token_address) {
+        deployToken(token_address, tokenData.name, tokenData.symbol);
+      }
+    } catch (e) {
+      console.log('jdkjhkjhkjhjkjkh', e);
     }
   };
 
@@ -95,17 +99,17 @@ function MigratePage() {
         const alternativeToken: any = await supportedNetworks.find(
           (network) => network.chainId === chainId,
         );
+        console.log(data?.logs);
+        return;
 
-        body.tokenData.tokens[alternativeToken.id!] = { address: trim(data?.logs[0]?.topics[2]!) };
+        body.tokenData.tokens[alternativeToken.id!] = { address: trim(data?.logs[1]?.topics[2]!) };
 
         const response = await axiosInstance.post(`/migrate/token`, body);
-        console.log(body, 'body being passed');
 
         setPullRequestUrl(response?.data?.data?.pullRequestUrl);
         setDone(true);
       }
     } catch (error) {
-      console.error(error);
       toast('An error occured! Please try again later', {
         type: 'error',
       });
@@ -145,7 +149,6 @@ function MigratePage() {
     if (token_address) {
       fetchTokenData();
     }
-    console.log(token_address);
   }, [token_address]);
   return (
     <div>
@@ -178,29 +181,31 @@ function MigratePage() {
                     />
                   </div>
                   {tokenData.name !== '' ? (
-                    <div className="w-[504px] h-[297px] px-6 py-3 bg-neutral-50 rounded-[10px] border border-zinc-200 flex-col justify-start items-start gap-6 inline-flex">
-                      <div className="w-[504px] h-[75px] flex-col justify-start items-start gap-[7px] flex">
-                        <div className="text-neutral-900 text-sm font-medium leading-tight">
-                          Token Name
+                    <div className="w-full px-3">
+                      <div className="w-full px-6 py-3 bg-neutral-50 rounded-[10px] border border-zinc-200 flex-col justify-start items-start gap-6 inline-flex">
+                        <div className="flex-col justify-start items-start gap-[7px] flex">
+                          <div className="text-neutral-900 text-sm font-medium leading-tight">
+                            Token Name
+                          </div>
+                          <div className="text-blue-700 text-xl font-normal leading-[29px]">
+                            {tokenData.name}
+                          </div>
                         </div>
-                        <div className="text-blue-700 text-xl font-normal leading-[29px]">
-                          {tokenData.name}
+                        <div className="flex-col justify-start items-start gap-[7px] flex">
+                          <div className="text-neutral-900 text-sm font-medium leading-tight">
+                            Token Symbol
+                          </div>
+                          <div className="text-blue-700 text-xl font-normal leading-[29px]">
+                            {tokenData.symbol}
+                          </div>
                         </div>
-                      </div>
-                      <div className="w-[504px] h-[75px] flex-col justify-start items-start gap-[7px] flex">
-                        <div className="text-neutral-900 text-sm font-medium leading-tight">
-                          Token Symbol
-                        </div>
-                        <div className="text-blue-700 text-xl font-normal leading-[29px]">
-                          {tokenData.symbol}
-                        </div>
-                      </div>
-                      <div className="w-[504px] h-[75px] flex-col justify-start items-start gap-[7px] flex">
-                        <div className="text-neutral-900 text-sm font-medium leading-tight">
-                          Token Decimal
-                        </div>
-                        <div className="text-blue-700 text-xl font-normal leading-[29px]">
-                          {tokenData.decimal}
+                        <div className="flex-col justify-start items-start gap-[7px] flex">
+                          <div className="text-neutral-900 text-sm font-medium leading-tight">
+                            Token Decimal
+                          </div>
+                          <div className="text-blue-700 text-xl font-normal leading-[29px]">
+                            {tokenData.decimal}
+                          </div>
                         </div>
                       </div>
                     </div>
