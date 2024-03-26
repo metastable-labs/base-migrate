@@ -5,12 +5,18 @@ import { MigrateTokenDto } from '../dtos/migrate';
 
 import { env } from '../common/config/env';
 import { Token } from '../common/interfaces/index.interface';
+import { DB } from '../common/helpers/db';
 
 interface GitHubFileContentResponse {
   sha: string;
 }
 
 export class MigrateService {
+  private db: DB;
+  constructor() {
+    this.db = new DB();
+  }
+
   async migrateToken(body: MigrateTokenDto, accessToken: string) {
     const octokit = new Octokit({ auth: accessToken });
 
@@ -23,6 +29,16 @@ export class MigrateService {
     await this.addToken(octokit, owner, repo, body.tokenData, logoUrl);
 
     const pullRequestUrl = `${env.github.url}/${env.chain.username}/${repo}/compare/master...${owner}:${repo}:master`;
+    const address =
+      body.tokenData.tokens?.ethereum?.address ??
+      body.tokenData.tokens?.sepolia?.address;
+
+    body.tokenData = {
+      ...body.tokenData,
+      pullRequestUrl,
+    };
+
+    await this.db.createOrUpdate(body.tokenData, address);
 
     return {
       pullRequestUrl,
