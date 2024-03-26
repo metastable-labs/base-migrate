@@ -62,7 +62,9 @@ function MigratePage() {
       //   return navigate.push('/home');
       // }
 
-      nextStep();
+      // if (!cookies?.authtoken) {
+      //   return navigate.push('/home');
+      // }
 
       // if (token_address && tokenData.decimal === '18') {
       //   deployToken(token_address, tokenData.name, tokenData.symbol);
