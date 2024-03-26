@@ -57,15 +57,20 @@ function MigratePage() {
     try {
       e.preventDefault();
 
-      if (!cookies?.authtoken) {
-        return navigate.push('/home');
-      }
+      toast("We're currently updating our service. Please try again shortly!", {
+        type: 'error',
+      });
+      return;
 
-      nextStep();
+      // if (!cookies?.authtoken) {
+      //   return navigate.push('/home');
+      // }
 
-      if (token_address) {
-        deployToken(token_address, tokenData.name, tokenData.symbol);
-      }
+      // nextStep();
+
+      // if (token_address) {
+      //   deployToken(token_address, tokenData.name, tokenData.symbol);
+      // }
     } catch (e) {
       //
     }
