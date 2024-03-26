@@ -48,7 +48,6 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
 
   useEffect(() => {
     setTimeout(() => {
-      console.log('shhdhdhd', isPending, isConfirmed);
       if (isPending || !isConfirmed) return;
 
       if (step === 3 && !isDone) return;
