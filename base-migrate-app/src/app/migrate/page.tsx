@@ -160,6 +160,7 @@ function MigratePage() {
       fetchTokenData();
     }
   }, [token_address]);
+
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}

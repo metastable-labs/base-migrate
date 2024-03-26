@@ -20,7 +20,6 @@ const steps = [
   },
   {
     title: 'Forking superchain token list to github repo',
-
     status: 'stale',
     time: '',
   },
@@ -49,9 +48,17 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
 
   useEffect(() => {
     setTimeout(() => {
+      console.log('shhdhdhd', isPending, isConfirmed);
       if (isPending || !isConfirmed) return;
 
       if (step === 3 && !isDone) return;
+
+      if (step === 4) {
+        next();
+        return toast('Migration complete', {
+          type: 'success',
+        });
+      }
 
       const newData = [...data];
 
@@ -66,15 +73,8 @@ const MigrationProgress = ({ next, isPending, isConfirmed, isDone, refresh }: Pr
       setData([...newData]);
 
       setStep(step + 1);
-
-      if (step + 1 === 4) {
-        next();
-        toast('Migration complete', {
-          type: 'success',
-        });
-      }
     }, 3500);
-  }, [step]);
+  }, [step, isPending, isConfirmed]);
 
   useEffect(() => {
     if (refresh) {
