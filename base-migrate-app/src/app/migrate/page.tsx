@@ -67,7 +67,7 @@ function MigratePage() {
         deployToken(token_address, tokenData.name, tokenData.symbol);
       }
     } catch (e) {
-      console.log('jdkjhkjhkjhjkjkh', e);
+      //
     }
   };
 
@@ -134,7 +134,6 @@ function MigratePage() {
           decimal: res.decimal.toString(), // Convert number to string to match expected type
         });
       } catch (err) {
-        console.log(chainId);
         toast(
           `Invalid address: Address must be a valid token contract on ${chainId === 8453 ? 'Ethereum(L1)' : 'Sepolia'}`,
           {
@@ -160,6 +159,7 @@ function MigratePage() {
       fetchTokenData();
     }
   }, [token_address]);
+
   return (
     <div>
       {activeStep < 2 && <StepHeader activeStep={activeStep} />}

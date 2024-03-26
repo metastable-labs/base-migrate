@@ -32,8 +32,8 @@ const ConnectGithub = () => {
   const [loading, setLoading] = useState(false);
 
   const url = !cookies?.isAuthenticated
-    ? 'https://github.com/apps/base-migrate/installations/new'
-    : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_uri=http://localhost:3000/home';
+    ? 'https://github.com/apps/base-migrate/installations/new?redirect_uri=https://base-migrate.xyz/home'
+    : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_uri=https://base-migrate.xyz/home';
 
   const setup = async () => {
     try {
