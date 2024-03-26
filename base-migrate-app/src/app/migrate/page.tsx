@@ -126,12 +126,22 @@ function MigratePage() {
     // Check if the input is a valid Ethereum wallet address
     const isAddressMatch = token_address?.match(/^0x[a-fA-F0-9]{40}$/);
     if (isAddressMatch) {
-      const res = await readTokenData(token_address!);
-      setTokenData({
-        name: res.name,
-        symbol: res.symbol,
-        decimal: res.decimal.toString(), // Convert number to string to match expected type
-      });
+      try {
+        const res = await readTokenData(token_address!);
+        setTokenData({
+          name: res.name,
+          symbol: res.symbol,
+          decimal: res.decimal.toString(), // Convert number to string to match expected type
+        });
+      } catch (err) {
+        console.log(chainId);
+        toast(
+          `Invalid address: Address must be a valid token contract on ${chainId === 8453 ? 'Ethereum(L1)' : 'Sepolia'}`,
+          {
+            type: 'error',
+          },
+        );
+      }
     } else {
       setTokenData({
         name: '',
