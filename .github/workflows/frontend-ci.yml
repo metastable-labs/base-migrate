@@ -11,6 +11,9 @@ jobs:
     build:
       runs-on: ubuntu-latest
 
+      env:
+        NEXT_PUBLIC_PROJECT_ID: ${{ secrets.WALLET_CONNECT_ID }}
+
       strategy:
         matrix:
           node-version: [ 18.x, 20.x ]
