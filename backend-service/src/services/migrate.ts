@@ -9,6 +9,7 @@ import { DB } from '../common/helpers/db';
 
 interface GitHubFileContentResponse {
   sha: string;
+  content: string;
 }
 
 export class MigrateService {
@@ -29,13 +30,14 @@ export class MigrateService {
     await this.addToken(octokit, owner, repo, body.tokenData, logoUrl);
 
     const pullRequestUrl = `${env.github.url}/${env.chain.username}/${repo}/compare/master...${owner}:${repo}:master`;
-    const address =
-      body.tokenData.tokens?.ethereum?.address ??
-      body.tokenData.tokens?.sepolia?.address;
+
+    const address = this.getDatabaseKeyFromTokens(body.tokenData);
 
     body.tokenData = {
       ...body.tokenData,
       pullRequestUrl,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     await this.db.createOrUpdate(body.tokenData, address);
@@ -43,6 +45,28 @@ export class MigrateService {
     return {
       pullRequestUrl,
     };
+  }
+
+  getDatabaseKeyFromTokens(tokenData: Token): string | undefined {
+    const tokenPriority = [
+      'ethereum',
+      'sepolia',
+      'optimism',
+      'optimism-sepolia',
+      'base',
+      'base-sepolia',
+      'mode',
+      'pgn',
+    ];
+
+    for (const key of tokenPriority) {
+      const address = tokenData.tokens?.[key]?.address;
+      if (address) {
+        return address;
+      }
+    }
+
+    return undefined;
   }
 
   async forkRepository(octokit: Octokit) {
@@ -119,12 +143,11 @@ export class MigrateService {
         owner,
         repo,
         path,
-        message,
+        message: res ? `Updated ${message}` : `Added ${message}`,
         content,
         sha: res ? res.sha : undefined,
       }
     );
-
     return response.data;
   }
 
@@ -136,26 +159,32 @@ export class MigrateService {
     logoUrl: string
   ) {
     const logoContent = await this.fetchAndEncodeImage(logoUrl);
-    const dataContent = Buffer.from(
-      JSON.stringify(tokenData, null, 2)
-    ).toString('base64');
-
     await this.createOrUpdateFile(
       octokit,
       owner,
       repo,
       `data/${tokenData.symbol}/logo.svg`,
       logoContent,
-      'Added logo.svg'
+      `${tokenData.name} logo.svg`
+    );
+
+    const dataPath = `data/${tokenData.symbol}/data.json`;
+
+    const dataContent = await this.getMergedContentAndUpdate(
+      octokit,
+      owner,
+      repo,
+      dataPath,
+      tokenData
     );
 
     await this.createOrUpdateFile(
       octokit,
       owner,
       repo,
-      `data/${tokenData.symbol}/data.json`,
+      dataPath,
       dataContent,
-      'Added data.json'
+      `${tokenData.name} data.json`
     );
   }
 
@@ -187,6 +216,48 @@ export class MigrateService {
     } catch (error) {
       return null;
     }
+  }
+
+  async getMergedContentAndUpdate(
+    octokit: Octokit,
+    owner: string,
+    repo: string,
+    path: string,
+    content: Token
+  ) {
+    const res = await this.getFileSHA(octokit, owner, repo, path);
+
+    if (!res) {
+      const dataContent = Buffer.from(
+        JSON.stringify(content, null, 2)
+      ).toString('base64');
+
+      return dataContent;
+    }
+
+    let currentData: Token;
+
+    if (res?.content) {
+      const contentDecoded = Buffer.from(res.content, 'base64').toString(
+        'utf8'
+      );
+      currentData = JSON.parse(contentDecoded);
+    }
+
+    const mergedContent: Token = {
+      ...currentData,
+      ...content,
+      tokens: {
+        ...currentData.tokens,
+        ...content.tokens,
+      },
+    };
+
+    const updatedContentBase64 = Buffer.from(
+      JSON.stringify(mergedContent, null, 2)
+    ).toString('base64');
+
+    return updatedContentBase64;
   }
 
   encodeContructParams(
