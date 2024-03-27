@@ -18,7 +18,8 @@ import useSystemFunctions from '@/hooks/useSystemFunctions';
 import readTokenData from '../utils/read-contract';
 
 function MigratePage() {
-  const { deployToken, isPending, isConfirmed, getTransactionData } = useContract();
+  const { deployToken, isPending, isConfirmed, getTransactionData, deployTokenWithDecimal } =
+    useContract();
   const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
@@ -57,20 +58,25 @@ function MigratePage() {
     try {
       e.preventDefault();
 
-      toast("We're currently updating our service. Please try again shortly!", {
-        type: 'error',
-      });
-      return;
+      if (!cookies?.authtoken) {
+        return navigate.push('/home');
+      }
+      nextStep();
 
-      // if (!cookies?.authtoken) {
-      //   return navigate.push('/home');
-      // }
-
-      // nextStep();
-
-      // if (token_address) {
-      //   deployToken(token_address, tokenData.name, tokenData.symbol);
-      // }
+      if (token_address) {
+        if (tokenData.decimal === '18') {
+          deployToken(token_address, tokenData.name, tokenData.symbol);
+        } else if (tokenData.decimal !== '18' && chainId === 8453) {
+          deployTokenWithDecimal(
+            token_address,
+            tokenData.name,
+            tokenData.symbol,
+            tokenData.decimal,
+          );
+        } else if (chainId === 84532) {
+          deployToken(token_address, tokenData.name, tokenData.symbol);
+        }
+      }
     } catch (e) {
       //
     }
@@ -105,9 +111,11 @@ function MigratePage() {
           (network) => network.chainId === chainId,
         );
 
-        const deployedToken = data?.logs[chainId === 84532 ? 1 : 0]?.topics[2];
-
-        body.tokenData.tokens[alternativeToken.id!] = { address: trim(deployedToken!) };
+        const logIndex = chainId === 84532 || tokenData.decimal !== '18' ? 1 : 0;
+        const deployedToken = data?.logs?.[logIndex]?.topics?.[2];
+        if (deployedToken) {
+          body.tokenData.tokens[alternativeToken.id] = { address: trim(deployedToken) };
+        }
 
         const response = await axiosInstance.post(`/migrate/token`, body);
 

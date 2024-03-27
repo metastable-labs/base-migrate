@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "forge-std/Script.sol";
 import "../src/BasedMigrateERC20.sol";
 import "../src/factory/BasedERC20Factory.sol";
 import {Script} from "forge-std/Script.sol";
