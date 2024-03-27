@@ -5,7 +5,7 @@ import { Token } from '../../interfaces/index.interface';
 export class DB {
   private dbPath: string;
   constructor() {
-    const dbPath = path.join(__dirname, '../../../database/db.json');
+    const dbPath = path.join(__dirname, '../../../../database/db.json');
 
     this.ensureFileExists(dbPath, '{}');
     this.dbPath = path.join(dbPath);
