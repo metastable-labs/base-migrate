@@ -3,13 +3,9 @@ name: Frontend Build CI
 on:
   push:
     branches: [ master ]
-    paths:
-      - 'base-migrate-app/**'
 
   pull_request:
     branches: [ master ]
-    paths:
-      - 'base-migrate-app/**'
 
 jobs:
     build:
