@@ -73,6 +73,8 @@ function MigratePage() {
             tokenData.symbol,
             tokenData.decimal,
           );
+        } else if (chainId === 84532) {
+          deployToken(token_address, tokenData.name, tokenData.symbol);
         }
       }
     } catch (e) {
