@@ -58,20 +58,22 @@ function MigratePage() {
     try {
       e.preventDefault();
 
-      // if (!cookies?.authtoken) {
-      //   return navigate.push('/home');
-      // }
+      if (!cookies?.authtoken) {
+        return navigate.push('/home');
+      }
+      nextStep();
 
-      // if (!cookies?.authtoken) {
-      //   return navigate.push('/home');
-      // }
-
-      // if (token_address && tokenData.decimal === '18') {
-      //   deployToken(token_address, tokenData.name, tokenData.symbol);
-      // }
-      console.log('got here');
-      if (token_address && tokenData.decimal !== '18' && chainId === 8453) {
-        deployTokenWithDecimal(token_address, tokenData.name, tokenData.symbol, tokenData.decimal);
+      if (token_address) {
+        if (tokenData.decimal === '18') {
+          deployToken(token_address, tokenData.name, tokenData.symbol);
+        } else if (tokenData.decimal !== '18' && chainId === 8453) {
+          deployTokenWithDecimal(
+            token_address,
+            tokenData.name,
+            tokenData.symbol,
+            tokenData.decimal,
+          );
+        }
       }
     } catch (e) {
       //
@@ -107,9 +109,11 @@ function MigratePage() {
           (network) => network.chainId === chainId,
         );
 
-        const deployedToken = data?.logs[chainId === 84532 ? 1 : 0]?.topics[2];
-
-        body.tokenData.tokens[alternativeToken.id!] = { address: trim(deployedToken!) };
+        const logIndex = chainId === 84532 || tokenData.decimal !== '18' ? 1 : 0;
+        const deployedToken = data?.logs?.[logIndex]?.topics?.[2];
+        if (deployedToken) {
+          body.tokenData.tokens[alternativeToken.id] = { address: trim(deployedToken) };
+        }
 
         const response = await axiosInstance.post(`/migrate/token`, body);
 

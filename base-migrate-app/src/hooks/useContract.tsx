@@ -47,7 +47,7 @@ const useContract = () => {
     writeContract({
       address: MigrateFactory.based_migrate_factory,
       abi: BasedERC20FactoryMain.abi,
-      functionName: funcName,
+      functionName: 'beBased',
       args: [remoteToken, tokenName, tokenSymbol, Number(tokenDecimal)],
     });
   };
