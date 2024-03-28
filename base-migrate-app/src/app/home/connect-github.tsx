@@ -92,8 +92,9 @@ const ConnectGithub = () => {
         <GithubIcon />
         <div className="font-medium text-sm md:text-base text-black-250">Connect Github</div>
         <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center">
-          The github account connected will be used to fork and create a pull request on the
-          Superchain token list repo.
+          Your <span className="font-bold">personal</span> github account connected will be used to
+          fork and create a pull request on the Superchain token list repo. Connect to your{' '}
+          <span className="font-bold">personal</span> github account, not individual repositories.
         </p>
         <a href={url}>
           <Button
