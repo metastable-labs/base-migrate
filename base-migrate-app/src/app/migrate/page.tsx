@@ -95,7 +95,7 @@ function MigratePage() {
           tokenData: {
             name: tokenData?.name,
             symbol: tokenData?.symbol,
-            decimals: tokenData?.decimal,
+            decimals: Number(tokenData?.decimal),
             description: formData.token_description,
             website: formData.website,
             twitter: formData.twitter,
