@@ -23,9 +23,9 @@ export class AuthController {
       });
     } catch (error) {
       console.log('AuthController -> githubAuth -> error', error);
-      return res.status(error.status).json({
-        message: error.message,
-        statusCode: error.status,
+      return res.status(error?.status || 500).json({
+        message: error?.message || 'Internal server error, please try again later.',
+        statusCode: error?.status || 500,
       });
     }
   }
@@ -49,9 +49,9 @@ export class AuthController {
       });
     } catch (error) {
       console.log('AuthController -> getSession -> error', error);
-      return res.status(error.status).json({
-        message: error.message,
-        statusCode: error.status,
+      return res.status(error?.status || 500).json({
+        message: error?.message || 'Internal server error, please try again later.',
+        statusCode: error?.status || 500,
       });
     }
   }
