@@ -16,6 +16,11 @@ import CancelIcon from './cancel-icon.svg';
 import DisconnectIcon from './disconnect.svg';
 import MenuIcon from './menu-icon.svg';
 import MobileViewIcon from './mobile-view-icon.svg';
+import CheckedIcon from './checked.svg';
+import Instruction1 from './instruction1.svg';
+import Instruction2 from './instruction2.svg';
+import Instruction3 from './instruction3.svg';
+import InformationLine from './information-line.svg';
 
 export {
   Logo,
@@ -36,4 +41,9 @@ export {
   DisconnectIcon,
   MenuIcon,
   MobileViewIcon,
+  CheckedIcon,
+  Instruction1,
+  Instruction2,
+  Instruction3,
+  InformationLine,
 };

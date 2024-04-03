@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import ConnectWallet from './connect-wallet';
 import ConnectGithub from './connect-github';
 import { MobileView } from '@/components';
+import classNames from 'classnames';
 
 const HomePage = () => {
   const { isConnected } = useAccount();
@@ -13,7 +14,11 @@ const HomePage = () => {
   return (
     <>
       <MobileView />
-      <div className="min-h-[89vh] hidden lg:flex flex-col justify-center items-center">
+      <div
+        className={classNames('min-h-[89vh] hidden lg:flex flex-col', {
+          'justify-start items-start': isConnected,
+          'justify-center items-center': !isConnected,
+        })}>
         {!isConnected && <ConnectWallet />}
 
         {isConnected && <ConnectGithub />}
