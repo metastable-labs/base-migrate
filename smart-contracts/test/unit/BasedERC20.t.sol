@@ -8,11 +8,11 @@ import {ILegacyMintableERC20, IOptimismMintableERC20} from "../../src/interface/
 contract BasedERC20Test is BasedERC20Base {
     function test_revert_cannotInitializeImplementation() public {
         vm.expectRevert();
-        implementation.initialize(bridge, address(remoteToken), tokenName, tokenSymbol);
+        implementation.initialize(bridge, address(remoteToken), tokenName, tokenSymbol, tokenDecimal);
     }
 
     function test_cloneWillBeInitialized() public {
-        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol);
+        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol, tokenDecimal);
         assertEq(clone.BRIDGE(), bridge);
         assertEq(clone.bridge(), bridge);
         assertEq(clone.l2Bridge(), bridge);
@@ -24,11 +24,11 @@ contract BasedERC20Test is BasedERC20Base {
 
     function test_revert_cannotReinitialize() public {
         // initialize once
-        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol);
+        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol, tokenDecimal);
 
         // revert when reinitialize
         vm.expectRevert();
-        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol);
+        clone.initialize(bridge, address(remoteToken), tokenName, tokenSymbol, tokenDecimal);
     }
 
     function test_initializationWithZeroAddressForRemoteToken() public {
@@ -37,7 +37,7 @@ contract BasedERC20Test is BasedERC20Base {
         // incase remote token is passed as zero
 
         // initialize once
-        clone.initialize(bridge, address(0), tokenName, tokenSymbol);
+        clone.initialize(bridge, address(0), tokenName, tokenSymbol, tokenDecimal);
         assertEq(clone.REMOTE_TOKEN(), address(0));
         assertEq(clone.remoteToken(), address(0));
         assertEq(clone.l1Token(), address(0));
@@ -49,7 +49,7 @@ contract BasedERC20Test is BasedERC20Base {
         // incase bridge is passed as zero
 
         // initialize once
-        clone.initialize(address(0), address(remoteToken), tokenName, tokenSymbol);
+        clone.initialize(address(0), address(remoteToken), tokenName, tokenSymbol, tokenDecimal);
         assertEq(clone.BRIDGE(), address(0));
         assertEq(clone.bridge(), address(0));
         assertEq(clone.l2Bridge(), address(0));

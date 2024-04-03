@@ -70,8 +70,12 @@ contract BasedERC20Factory {
      * @param _name Name for the new token.
      * @param _symbol Symbol for the new token.
      * @return Address of the newly deployed BasedMigrateERC20 token.
+     * @param _decimals    ERC20 decimals
      */
-    function beBased(address _remoteToken, string memory _name, string memory _symbol) external returns (address) {
+    function beBased(address _remoteToken, string memory _name, string memory _symbol, uint8 _decimals)
+        external
+        returns (address)
+    {
         if (_remoteToken == address(0)) {
             revert RemoteTokenCannotBeZeroAddress();
         }
@@ -79,7 +83,7 @@ contract BasedERC20Factory {
         address newBasedERC20 = Clones.clone(basedMigrateErc20);
 
         // initialize clone
-        BasedMigrateERC20(newBasedERC20).initialize(BRIDGE, _remoteToken, _name, _symbol);
+        BasedMigrateERC20(newBasedERC20).initialize(BRIDGE, _remoteToken, _name, _symbol, _decimals);
 
         emit BasedMigrateERC20Created(_remoteToken, newBasedERC20, msg.sender);
 

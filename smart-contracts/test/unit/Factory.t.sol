@@ -5,17 +5,20 @@ import {FactoryBase, BasedMigrateERC20, BasedERC20Factory} from "../base/Factory
 contract FactoryUnitTest is FactoryBase {
     string constant tokenName = "BeBased";
     string constant tokenSymbol = "BB";
+    uint8 tokenDecimal = 18;
 
     function test_BeBased() public {
         // prepare args
         address remoteToken = address(remote);
 
         // deploy new token
-        BasedMigrateERC20 newToken = BasedMigrateERC20(factory.beBased(remoteToken, tokenName, tokenSymbol));
+        BasedMigrateERC20 newToken =
+            BasedMigrateERC20(factory.beBased(remoteToken, tokenName, tokenSymbol, tokenDecimal));
 
         // assert data
         assertEq(newToken.name(), tokenName);
         assertEq(newToken.symbol(), tokenSymbol);
+        assertEq(newToken.decimals(), tokenDecimal);
         assertEq(newToken.BRIDGE(), bridge);
         assertEq(newToken.l1Token(), remoteToken);
     }
@@ -26,6 +29,6 @@ contract FactoryUnitTest is FactoryBase {
 
         // expect revert when Remote token address is zero address
         vm.expectRevert(BasedERC20Factory.RemoteTokenCannotBeZeroAddress.selector);
-        factory.beBased(remoteToken, tokenName, tokenSymbol);
+        factory.beBased(remoteToken, tokenName, tokenSymbol, tokenDecimal);
     }
 }
