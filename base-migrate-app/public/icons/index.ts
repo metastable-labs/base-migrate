@@ -15,6 +15,7 @@ import BetaIcon from './beta.svg';
 import CancelIcon from './cancel-icon.svg';
 import DisconnectIcon from './disconnect.svg';
 import MenuIcon from './menu-icon.svg';
+import MobileViewIcon from './mobile-view-icon.svg';
 
 export {
   Logo,
@@ -34,4 +35,5 @@ export {
   CancelIcon,
   DisconnectIcon,
   MenuIcon,
+  MobileViewIcon,
 };
