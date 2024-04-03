@@ -20,7 +20,13 @@ import CheckedIcon from './checked.svg';
 import Instruction1 from './instruction1.svg';
 import Instruction2 from './instruction2.svg';
 import Instruction3 from './instruction3.svg';
+import Instruction4 from './instruction4.svg';
+import Instruction5 from './instruction5.svg';
 import InformationLine from './information-line.svg';
+import PullGreen from './pull-green.svg';
+import PullBlue from './pull-blue.svg';
+import CopyIcon from './copy-icon.svg';
+import ArrowRight from './arrow-right.svg';
 
 export {
   Logo,
@@ -46,4 +52,10 @@ export {
   Instruction2,
   Instruction3,
   InformationLine,
+  PullGreen,
+  PullBlue,
+  CopyIcon,
+  ArrowRight,
+  Instruction4,
+  Instruction5,
 };

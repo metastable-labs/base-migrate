@@ -16,14 +16,15 @@ import useContract from '@/hooks/useContract';
 import { axiosInstance } from '@/utils/axios';
 import useSystemFunctions from '@/hooks/useSystemFunctions';
 import readTokenData from '../utils/read-contract';
+import Success from './success';
 
 function MigratePage() {
-  const { deployToken, isPending, isConfirmed, getTransactionData, deployTokenWithDecimal } =
+  const { deployToken, isPending, isConfirmed, getTransactionData, deployTokenWithDecimal, hash } =
     useContract();
   const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     token_description: '',
     logo: '',
@@ -35,6 +36,7 @@ function MigratePage() {
   const [token_address, setTokenAddress] = useState<`0x${string}`>();
   const [tokenData, setTokenData] = useState({ decimal: '', name: '', symbol: '' });
   const [pullRequestUrl, setPullRequestUrl] = useState('');
+  const [deployedToken, setDeployedToken] = useState('');
   const [cookies] = useCookies(['authtoken']);
 
   const handleChange = (e: any) => {
@@ -120,6 +122,7 @@ function MigratePage() {
         const response = await axiosInstance.post(`/migrate/token`, body);
 
         setPullRequestUrl(response?.data?.data?.pullRequestUrl);
+        setDeployedToken(deployedToken!);
         setDone(true);
       }
     } catch (error) {
@@ -185,10 +188,14 @@ function MigratePage() {
               {
                 'md:w-[552px]': activeStep !== 2,
                 'md:w-[448px]': activeStep === 2,
+                'md:w-full border-none -mt-5': activeStep === 3,
                 'mt-20': activeStep > 1,
               },
             )}>
-            <div className="flex justify-center pb-6">
+            <div
+              className={classNames('flex justify-center pb-6', {
+                hidden: activeStep === 3,
+              })}>
               <Logo />
             </div>
             <>
@@ -304,6 +311,7 @@ function MigratePage() {
                 )}
               </form>
             </>
+
             {activeStep === 2 && (
               <MigrationProgress
                 isDone={done}
@@ -315,27 +323,7 @@ function MigratePage() {
             )}
 
             {activeStep === 3 && (
-              <div>
-                <div className="md:text-lg text-black-250 text-center font-medium">
-                  You’re almost Based 🔵
-                </div>
-                <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center mt-4 px-6 md:px-20">
-                  To complete the migration, submit a pull request to the Superchain token repo
-                  list.
-                </p>
-                <p className="text-black-300 text-sm md:text-base leading-5 lg:leading-7 text-center mt-4 px-6 md:px-20">
-                  Once your PR is merged, the token list will update automatically to include your
-                  token and your token will be available on the Base Bridge.
-                </p>
-
-                <a
-                  target={'_blank'}
-                  rel={'noreferrer'}
-                  href={pullRequestUrl}
-                  className="py-7 flex flex-col justify-center items-center">
-                  <Button onClick={() => {}} variant="tertiary" text={'Raise Pull Request'} />
-                </a>
-              </div>
+              <Success hash={hash} token_address={deployedToken} repo_url={pullRequestUrl} />
             )}
           </div>
         </div>

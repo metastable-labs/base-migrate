@@ -108,7 +108,7 @@ const ConnectGithub = () => {
               The github account connected will be used to fork and create a pr on the Superchain
               token list repo
             </p>
-            <a href={url}>
+            <a href={checked ? url : '#'}>
               <Button
                 onClick={() => setLoading(true)}
                 loading={loading}
@@ -121,7 +121,11 @@ const ConnectGithub = () => {
 
             <div className="flex items-center justify-center gap-4">
               <ClickAnimation onClick={() => setChecked(!checked)}>
-                <CheckedIcon />
+                <div>
+                  {checked && <CheckedIcon />}
+
+                  {!checked && <div className="w-5 h-5 rounded-[6px] border border-grey-450" />}
+                </div>
               </ClickAnimation>
 
               <div className="text-black-500">I have read all instructions</div>
@@ -139,7 +143,7 @@ const ConnectGithub = () => {
             </p>
 
             <div className="w-[80%]">
-              <div className="mt-16 flex gap-5">
+              {/* <div className="mt-16 flex gap-5">
                 <div className="w-[48px]">
                   <Instruction1 />
                 </div>
@@ -151,7 +155,7 @@ const ConnectGithub = () => {
                     On our platform, locate and click the "Connect with GitHub" button.
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="mt-12 flex gap-5">
                 <div className="w-[48px]">
@@ -176,7 +180,7 @@ const ConnectGithub = () => {
                 </div>
               </div>
 
-              <div className="mt-16 flex gap-5">
+              {/* <div className="mt-16 flex gap-5">
                 <div className="w-[48px]">
                   <Instruction3 />
                 </div>
@@ -188,7 +192,7 @@ const ConnectGithub = () => {
                     integration features.
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

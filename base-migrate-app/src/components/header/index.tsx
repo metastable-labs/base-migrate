@@ -66,10 +66,12 @@ const Header = () => {
             </div>
 
             {!isConnected || !address || isDisconnected ? (
-              <Button
-                onClick={() => (pathname === '/' ? navigate.push(route) : connectModal())}
-                text={pathname === '/' ? 'Migrate to base' : 'Connect wallet'}
-              />
+              <div className="hidden lg:flex">
+                <Button
+                  onClick={() => (pathname === '/' ? navigate.push(route) : connectModal())}
+                  text={pathname === '/' ? 'Migrate to base' : 'Connect wallet'}
+                />
+              </div>
             ) : (
               <div>
                 <div className="items-center justify-end gap-4 md:gap-10 hidden md:flex">

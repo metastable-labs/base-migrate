@@ -67,6 +67,7 @@ const useContract = () => {
     getTransactionData,
     deployTokenWithDecimal,
     error,
+    hash,
   };
 };
 
