@@ -35,6 +35,11 @@ export class DB {
     return db[address];
   }
 
+  async findAll() {
+    const db = this.readDB();
+    return db;
+  }
+
   async createOrUpdate(token: Token, address: string) {
     const db = this.readDB();
     db[address] = token;

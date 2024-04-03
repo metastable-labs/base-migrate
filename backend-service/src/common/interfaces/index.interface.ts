@@ -32,6 +32,7 @@ export interface Token {
     };
   };
   pullRequestUrl?: string;
+  username?: string;
   createdAt?: string;
   updatedAt?: string;
 }
