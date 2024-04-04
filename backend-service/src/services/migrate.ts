@@ -35,6 +35,7 @@ export class MigrateService {
 
     body.tokenData = {
       ...body.tokenData,
+      username: owner,
       pullRequestUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -45,6 +46,13 @@ export class MigrateService {
     return {
       pullRequestUrl,
     };
+  }
+
+  async getMigrations() {
+    const dbData = await this.db.findAll();
+    const dbDataArray = Object.keys(dbData).map((key) => dbData[key]);
+
+    return dbDataArray;
   }
 
   getDatabaseKeyFromTokens(tokenData: Token): string | undefined {

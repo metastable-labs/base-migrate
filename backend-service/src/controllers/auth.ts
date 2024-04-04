@@ -24,7 +24,8 @@ export class AuthController {
     } catch (error) {
       console.log('AuthController -> githubAuth -> error', error);
       return res.status(error?.status || 500).json({
-        message: error?.message || 'Internal server error, please try again later.',
+        message:
+          error?.message || 'Internal server error, please try again later.',
         statusCode: error?.status || 500,
       });
     }
@@ -50,7 +51,60 @@ export class AuthController {
     } catch (error) {
       console.log('AuthController -> getSession -> error', error);
       return res.status(error?.status || 500).json({
-        message: error?.message || 'Internal server error, please try again later.',
+        message:
+          error?.message || 'Internal server error, please try again later.',
+        statusCode: error?.status || 500,
+      });
+    }
+  }
+  async getPermissions(req: Request, res: Response) {
+    try {
+      const accessToken = req.headers.authorization;
+
+      if (!accessToken) {
+        return res.status(401).json({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+      }
+
+      const response = await this.authService.getPermissions(accessToken);
+
+      return res.status(200).json({
+        message: 'Permissions retrieved successfully',
+        data: response,
+      });
+    } catch (error) {
+      console.log('AuthController -> getPermissions -> error', error);
+      return res.status(error?.status || 500).json({
+        message:
+          error?.message || 'Internal server error, please try again later.',
+        statusCode: error?.status || 500,
+      });
+    }
+  }
+
+  async disconnect(req: Request, res: Response) {
+    try {
+      const accessToken = req.headers.authorization;
+
+      if (!accessToken) {
+        return res.status(401).json({
+          message: 'Unauthorized',
+          statusCode: 401,
+        });
+      }
+
+      await this.authService.disconnect(accessToken);
+
+      return res.status(200).json({
+        message: 'Disconnected successfully',
+      });
+    } catch (error) {
+      console.log('AuthController -> disconnect -> error', error);
+      return res.status(error?.status || 500).json({
+        message:
+          error?.message || 'Internal server error, please try again later.',
         statusCode: error?.status || 500,
       });
     }

@@ -36,9 +36,28 @@ export class MigrateController {
         data: response,
       });
     } catch (error) {
-      console.log("MigrateController -> migrateToken -> error", error)
+      console.log('MigrateController -> migrateToken -> error', error);
       return res.status(error?.status || 500).json({
-        message: error?.message || 'Internal server error, please try again later.',
+        message:
+          error?.message || 'Internal server error, please try again later.',
+        statusCode: error?.status || 500,
+      });
+    }
+  }
+
+  async getMigrations(req: Request, res: Response) {
+    try {
+      const response = await this.migrateService.getMigrations();
+
+      return res.status(200).json({
+        message: 'Migrations retrieved successfully',
+        data: response,
+      });
+    } catch (error) {
+      console.log('MigrateController -> getMigrations -> error', error);
+      return res.status(error?.status || 500).json({
+        message:
+          error?.message || 'Internal server error, please try again later.',
         statusCode: error?.status || 500,
       });
     }
