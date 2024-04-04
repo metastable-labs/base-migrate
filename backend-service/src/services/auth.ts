@@ -30,6 +30,11 @@ export class AuthService {
 
     const userInfo = await octokit.request('GET /user');
 
+    const findInstallation = await this.findInstallation(
+      octokit,
+      userInfo.data.login
+    );
+
     return {
       accessToken: access_token,
       expiresIn: expires_in,
@@ -40,6 +45,10 @@ export class AuthService {
         username: userInfo.data.login,
         avatar: userInfo.data.avatar_url,
         profile: userInfo.data.html_url,
+      },
+      permissions: {
+        validInstallation: !!findInstallation,
+        ...findInstallation?.permissions,
       },
     };
   }
@@ -74,8 +83,10 @@ export class AuthService {
       username: userInfo.data.login,
       avatar: userInfo.data.avatar_url,
       profile: userInfo.data.html_url,
-      validInstallation: !!findInstallation,
-      permissions: findInstallation?.permissions,
+      permissions: {
+        validInstallation: !!findInstallation,
+        ...findInstallation?.permissions,
+      },
     };
   }
 
