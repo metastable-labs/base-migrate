@@ -19,7 +19,7 @@ import useSystemFunctions from '@/hooks/useSystemFunctions';
 import { axiosInstance, setTokenHeader } from '@/utils/axios';
 import Image from 'next/image';
 
-interface ResponseProp {
+interface AuthResponseProp {
   accessToken: string;
   expiresIn: number;
   refreshToken: string;
@@ -29,6 +29,9 @@ interface ResponseProp {
     username: string;
     avatar: string;
     profile: string;
+  };
+  permissions: {
+    validInstallation: boolean;
   };
 }
 
@@ -42,9 +45,13 @@ const ConnectGithub = () => {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
 
+  // const url = !cookies?.isAuthenticated
+  //   ? 'https://github.com/apps/base-migrate/installations/new?redirect_uri=https://www.base-migrate.xyz/home'
+  //   : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_uri=https://www.base-migrate.xyz/home';
+
   const url = !cookies?.isAuthenticated
-    ? 'https://github.com/apps/base-migrate/installations/new?redirect_uri=https://www.base-migrate.xyz/home'
-    : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_uri=https://www.base-migrate.xyz/home';
+    ? 'https://github.com/apps/base-migrate/installations/new?redirect_uri=http://localhost:3000/home'
+    : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_uri=http://localhost:3000/home';
 
   const setup = async () => {
     try {
@@ -54,23 +61,34 @@ const ConnectGithub = () => {
 
       const response = await axiosInstance.get(`/auth/github?code=${code}`);
 
-      const data: ResponseProp = response.data?.data;
+      const data: AuthResponseProp = response.data?.data;
 
-      setCookie('authtoken', data?.accessToken, {
-        expires: new Date(new Date().getTime() + data?.expiresIn * 1000),
-      });
-
-      if (!cookies?.isAuthenticated) {
-        setCookie('isAuthenticated', true, {
-          expires: new Date(new Date().getTime() + 10 * 365 * 24 * 60 * 60 * 1000),
+      if (data?.permissions?.validInstallation) {
+        toast('Github connected sucessfully', {
+          type: 'success',
         });
-      }
-      setTokenHeader(data?.accessToken);
 
-      toast('Github connected sucessfully', {
-        type: 'success',
-      });
-      return navigate.push('/migrate');
+        setCookie('authtoken', data?.accessToken, {
+          expires: new Date(new Date().getTime() + data?.expiresIn * 1000),
+        });
+
+        if (!cookies?.isAuthenticated) {
+          setCookie('isAuthenticated', true, {
+            expires: new Date(new Date().getTime() + 10 * 365 * 24 * 60 * 60 * 1000),
+          });
+        }
+        setTokenHeader(data?.accessToken);
+        return navigate.push('/migrate');
+      }
+
+      toast(
+        'Github authentication failed. Please read the guidelines and gibe the correct permission!',
+        {
+          type: 'error',
+          autoClose: 7000,
+        },
+      );
+      setChecked(false);
     } catch (error: any) {
       if (error?.response?.status !== 401) {
         toast('An error occured! Please try again later', {
@@ -91,9 +109,9 @@ const ConnectGithub = () => {
   };
 
   useEffect(() => {
-    if (cookies.authtoken) {
-      return navigate.push('/');
-    }
+    // if (cookies.authtoken) {
+    //   return navigate.push('/');
+    // }
     setup();
   }, []);
 

@@ -18,13 +18,17 @@ import useSystemFunctions from '@/hooks/useSystemFunctions';
 import readTokenData from '../utils/read-contract';
 import Success from './success';
 
+interface ResponseProp {
+  validInstallation: boolean;
+}
+
 function MigratePage() {
   const { deployToken, isPending, isConfirmed, getTransactionData, deployTokenWithDecimal, hash } =
     useContract();
   const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(3);
   const [formData, setFormData] = useState({
     token_description: '',
     logo: '',
@@ -37,7 +41,15 @@ function MigratePage() {
   const [tokenData, setTokenData] = useState({ decimal: '', name: '', symbol: '' });
   const [pullRequestUrl, setPullRequestUrl] = useState('');
   const [deployedToken, setDeployedToken] = useState('');
+  const [userHasValidPermission, setUserHasValidPermission] = useState(false);
   const [cookies] = useCookies(['authtoken']);
+
+  const navigateUserToAuth = () => {
+    toast('Please reauthenticate to github.', {
+      type: 'info',
+    });
+    return navigate.push('/home');
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -60,8 +72,8 @@ function MigratePage() {
     try {
       e.preventDefault();
 
-      if (!cookies?.authtoken) {
-        return navigate.push('/home');
+      if (!cookies?.authtoken || !userHasValidPermission) {
+        return navigateUserToAuth();
       }
       nextStep();
 
@@ -166,6 +178,13 @@ function MigratePage() {
     }
   };
 
+  const checkAuthPermission = async () => {
+    const response = await axiosInstance.get(`/auth/github/permissions`);
+    const data: ResponseProp = response.data?.data;
+
+    return setUserHasValidPermission(data.validInstallation);
+  };
+
   useEffect(() => {
     fetchData();
   }, [isPending, isConfirmed]);
@@ -175,6 +194,10 @@ function MigratePage() {
       fetchTokenData();
     }
   }, [token_address]);
+
+  useEffect(() => {
+    checkAuthPermission();
+  }, []);
 
   return (
     <>
