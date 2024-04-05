@@ -28,7 +28,7 @@ function MigratePage() {
   const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     token_description: '',
     logo: '',
@@ -179,7 +179,13 @@ function MigratePage() {
   };
 
   const checkAuthPermission = async () => {
-    const response = await axiosInstance.get(`/auth/github/permissions`);
+    if (!cookies.authtoken) return;
+
+    const response = await axiosInstance.get(`/auth/github/permissions`, {
+      headers: {
+        Authorization: `Bearer ${cookies.authtoken}`,
+      },
+    });
     const data: ResponseProp = response.data?.data;
 
     return setUserHasValidPermission(data.validInstallation);
@@ -197,7 +203,7 @@ function MigratePage() {
 
   useEffect(() => {
     checkAuthPermission();
-  }, []);
+  }, [cookies.authtoken]);
 
   return (
     <>
