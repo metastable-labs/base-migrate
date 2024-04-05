@@ -62,6 +62,25 @@ export class MigrateController {
       });
     }
   }
+
+  async getMigration(req: Request, res: Response) {
+    try {
+      const { address } = req.params;
+      const response = await this.migrateService.getMigration(address);
+
+      return res.status(200).json({
+        message: 'Migration retrieved successfully',
+        data: response,
+      });
+    } catch (error) {
+      console.log('MigrateController -> getMigration -> error', error);
+      return res.status(error?.status || 500).json({
+        message:
+          error?.message || 'Internal server error, please try again later.',
+        statusCode: error?.status || 500,
+      });
+    }
+  }
 }
 
 export const migrateControllerInstance = new MigrateController(
