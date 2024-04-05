@@ -23,7 +23,7 @@ interface ResponseProp {
 }
 
 function MigratePage() {
-  const { deployToken, isPending, isConfirmed, getTransactionData, deployTokenWithDecimal, hash } =
+  const { deployToken, isPending, isConfirmed, getTransactionData, deployTokenWithDecimal } =
     useContract();
   const chainId = useChainId();
   const { navigate } = useSystemFunctions();
@@ -40,7 +40,8 @@ function MigratePage() {
   const [token_address, setTokenAddress] = useState<`0x${string}`>();
   const [tokenData, setTokenData] = useState({ decimal: '', name: '', symbol: '' });
   const [pullRequestUrl, setPullRequestUrl] = useState('');
-  const [deployedToken, setDeployedToken] = useState('');
+  const [deployedToken, setDeployedToken] = useState<`0x${string}`>();
+  const [hash, setHash] = useState<`0x${string}`>();
   const [userHasValidPermission, setUserHasValidPermission] = useState(false);
   const [cookies] = useCookies(['authtoken']);
 
@@ -134,7 +135,8 @@ function MigratePage() {
         const response = await axiosInstance.post(`/migrate/token`, body);
 
         setPullRequestUrl(response?.data?.data?.pullRequestUrl);
-        setDeployedToken(deployedToken!);
+        setDeployedToken(trim(deployedToken!));
+        setHash(data.blockHash);
         setDone(true);
       }
     } catch (error) {

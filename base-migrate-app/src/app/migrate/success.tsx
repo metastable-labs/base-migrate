@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { memo } from 'react';
+import { toast } from 'react-toastify';
 
 import { ClickAnimation, Container } from '@/components';
 import {
@@ -22,6 +23,14 @@ const Success = ({
   token_address?: string;
   hash?: string;
 }) => {
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(token_address!);
+    toast('Copied to clipboard', {
+      type: 'info',
+      autoClose: 2500,
+      position: 'top-left',
+    });
+  };
   return (
     <Container variant="dash" classes="w-full">
       <div className="flex justify-center gap-16 xl:gap-20 w-full">
@@ -48,7 +57,7 @@ const Success = ({
                 <div className="font-medium text-lg text-black-500">
                   {token_address?.slice?.(0, 6)}...{token_address?.slice(-4)}
                 </div>
-                <ClickAnimation>
+                <ClickAnimation onClick={copyToClipboard}>
                   <CopyIcon />
                 </ClickAnimation>
               </div>
