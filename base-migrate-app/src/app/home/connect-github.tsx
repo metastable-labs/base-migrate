@@ -157,31 +157,37 @@ const ConnectGithub = () => {
             </p>
 
             <div className="w-[80%]">
-              {/* <div className="mt-16 flex gap-5">
+              <div className="mt-10 flex gap-5">
                 <div className="w-[48px]">
                   <Instruction1 />
                 </div>
                 <div>
-                  <h4 className="font-medium text-xl text-black-500">
-                    Click the "Connect with GitHub" Button:
-                  </h4>
+                  <h4 className="font-medium text-xl text-black-500">Account Selection:</h4>
                   <p className="text-grey-300 mt-3 text-base">
-                    On our platform, locate and click the "Connect with GitHub" button.
+                    Select your <span className="font-bold">personal account</span>, not individual
+                    organizations, to give the correct permission.
                   </p>
-                </div>
-              </div> */}
 
-              <div className="mt-12 flex gap-5">
+                  <Image
+                    alt="github-image"
+                    src="/github-image2.png"
+                    width={400}
+                    height={200}
+                    className="w-full mt-5"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-10 flex gap-5">
                 <div className="w-[48px]">
                   <Instruction2 />
                 </div>
                 <div>
                   <h4 className="font-medium text-xl text-black-500">Authorize Access:</h4>
                   <p className="text-grey-300 mt-3 text-base">
-                    You will be redirected to GitHub's authorization page. GitHub will ask for your
-                    permission to grant Base Migrate access to your account. Select the option that
-                    grants access to{' '}
-                    <span className="font-bold">all repositories and future repositories.</span>
+                    GitHub will ask for your permission to grant Base Migrate access to your
+                    account. Select
+                    <span className="font-bold"> all repositories.</span>
                   </p>
 
                   <Image
