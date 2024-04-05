@@ -9,8 +9,13 @@ router.post(
 );
 
 router.get(
-  '/list',
+  '/',
   migrateControllerInstance.getMigrations.bind(migrateControllerInstance)
+);
+
+router.get(
+  '/:address',
+  migrateControllerInstance.getMigration.bind(migrateControllerInstance)
 );
 
 
