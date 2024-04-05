@@ -28,7 +28,7 @@ function MigratePage() {
   const chainId = useChainId();
   const { navigate } = useSystemFunctions();
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(3);
   const [formData, setFormData] = useState({
     token_description: '',
     logo: '',
@@ -218,7 +218,6 @@ function MigratePage() {
                 'md:w-[552px]': activeStep !== 2,
                 'md:w-[448px]': activeStep === 2,
                 'md:w-full border-none -mt-5': activeStep === 3,
-                'mt-20': activeStep > 1,
               },
             )}>
             <div
