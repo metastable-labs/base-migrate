@@ -1,8 +1,7 @@
 /**
  * Requirements:
  * 1. Create new liquidity pool on Aerodrome
- * 2. Helper function to give approval for different tokens
- * 3. Create pairs with ERC20 tokens or with ETH
+ * 2. Create pairs with ERC20 tokens or with ETH
  */
 
 import { wagmiConfig } from "@/config/rainbowkit";

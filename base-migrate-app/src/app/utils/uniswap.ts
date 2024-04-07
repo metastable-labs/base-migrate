@@ -1,7 +1,7 @@
 /**
  * Requirements:
  * 1. Create new liquidity pool on Uniswap
- * 3. Create pairs with ERC20 tokens or with ETH
+ * 2. Create pairs with ERC20 tokens or with ETH
  */
 
 import { wagmiConfig } from "@/config/rainbowkit";
