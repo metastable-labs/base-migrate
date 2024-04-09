@@ -1,6 +1,7 @@
 import { Octokit } from '@octokit/core';
 import axios from 'axios';
 import { ethers } from 'ethers';
+import { v4 as uuidv4 } from 'uuid';
 import { MigrateTokenDto } from '../dtos/migrate';
 
 import { env } from '../common/config/env';
@@ -34,7 +35,9 @@ export class MigrateService {
     const address = this.getDatabaseKeyFromTokens(body.tokenData);
 
     body.tokenData = {
+      id: uuidv4(),
       ...body.tokenData,
+      username: owner,
       pullRequestUrl,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -45,6 +48,26 @@ export class MigrateService {
     return {
       pullRequestUrl,
     };
+  }
+
+  async getMigrations() {
+    const dbData = await this.db.findAll();
+    const dbDataArray = Object.keys(dbData).map((key) => dbData[key]);
+
+    return dbDataArray;
+  }
+
+  async getMigration(address: string) {
+    const dbData = await this.db.findOneByAddress(address);
+
+    if (!dbData) {
+      throw {
+        status: 404,
+        message: 'Token not found',
+      };
+    }
+
+    return dbData;
   }
 
   getDatabaseKeyFromTokens(tokenData: Token): string | undefined {

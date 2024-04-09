@@ -1,4 +1,5 @@
 export interface Token {
+  id?: string;
   name: string;
   symbol: string;
   decimals: number;
@@ -32,6 +33,7 @@ export interface Token {
     };
   };
   pullRequestUrl?: string;
+  username?: string;
   createdAt?: string;
   updatedAt?: string;
 }

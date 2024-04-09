@@ -2,6 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Token } from '../../interfaces/index.interface';
 
+interface TokenCollection {
+  [key: string]: Token;
+}
+
 export class DB {
   private dbPath: string;
   constructor() {
@@ -30,9 +34,23 @@ export class DB {
     fs.writeFileSync(this.dbPath, JSON.stringify(data, null, 2));
   }
 
-  async find(address: string) {
+  async findOne(address: string): Promise<Token | undefined> {
     const db = this.readDB();
     return db[address];
+  }
+
+  async findOneByAddress(address: string): Promise<Token | undefined> {
+    const db = this.readDB() as TokenCollection;
+    return Object.values(db).find((tokenInfo) => {
+      return Object.values(tokenInfo.tokens).some(
+        (token) => token.address.toLowerCase() === address.toLowerCase()
+      );
+    });
+  }
+
+  async findAll(): Promise<TokenCollection> {
+    const db = this.readDB();
+    return db;
   }
 
   async createOrUpdate(token: Token, address: string) {

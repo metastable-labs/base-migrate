@@ -8,4 +8,16 @@ router.post(
   migrateControllerInstance.migrateToken.bind(migrateControllerInstance)
 );
 
+router.get(
+  '/',
+  migrateControllerInstance.getMigrations.bind(migrateControllerInstance)
+);
+
+router.get(
+  '/:address',
+  migrateControllerInstance.getMigration.bind(migrateControllerInstance)
+);
+
+
+
 export default router;

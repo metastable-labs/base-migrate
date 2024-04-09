@@ -46,9 +46,9 @@ const Header = () => {
     <>
       <Container
         variant={pathname === '/' ? 'home' : 'dash'}
-        classes="md:border-b md:border-white-150">
+        classes="md:border-b md:border-white-150 bg-blue-200 lg:bg-transparent">
         <header className="h-[11vh] flex items-center">
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-center lg:justify-between w-full">
             <div className="flex items-center gap-2">
               <ClickAnimation onClick={() => navigate.push('/')} classes="flex items-center gap-2">
                 <div className="hidden md:block">
@@ -60,16 +60,18 @@ const Header = () => {
                 <div className="text-xs md:text-xl text-black-100 font-medium">Base Migrate</div>
               </ClickAnimation>
 
-              <div className="ml-2.5 md:ml-5">
+              <div className="ml-2.5 md:ml-5 hidden lg:block">
                 <BetaIcon />
               </div>
             </div>
 
             {!isConnected || !address || isDisconnected ? (
-              <Button
-                onClick={() => (pathname === '/' ? navigate.push(route) : connectModal())}
-                text={pathname === '/' ? 'Migrate to base' : 'Connect wallet'}
-              />
+              <div className="hidden lg:flex">
+                <Button
+                  onClick={() => (pathname === '/' ? navigate.push(route) : connectModal())}
+                  text={pathname === '/' ? 'Migrate to base' : 'Connect wallet'}
+                />
+              </div>
             ) : (
               <div>
                 <div className="items-center justify-end gap-4 md:gap-10 hidden md:flex">
@@ -103,9 +105,9 @@ const Header = () => {
                   </ClickAnimation>
                 </div>
 
-                <ClickAnimation classes="md:hidden" onClick={() => setOpenMenu(true)}>
+                {/* <ClickAnimation classes="md:hidden" onClick={() => setOpenMenu(true)}>
                   <MenuIcon />
-                </ClickAnimation>
+                </ClickAnimation> */}
               </div>
             )}
           </div>
