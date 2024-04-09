@@ -78,7 +78,7 @@ const ConnectGithub = () => {
       }
 
       toast(
-        'Github authentication failed. Please read the guidelines and gibe the correct permission!',
+        'Github authentication failed. Please read the guidelines and give the correct permission!',
         {
           type: 'error',
           autoClose: 7000,
