@@ -32,7 +32,7 @@ const ConnectGithub = () => {
   const [loading, setLoading] = useState(false);
 
   const url = !cookies?.isAuthenticated
-    ? 'https://github.com/apps/base-migrate/installations/new?redirect_uri=https://www.base-migrate.xyz/home'
+    ? 'https://github.com/apps/supermigrate-bot/installations/new?redirect_uri=https://www.base-migrate.xyz/home'
     : 'https://github.com/login/oauth/authorize?client_id=Iv1.c178abebc418bb02&scope=repo&redirect_uri=https://www.base-migrate.xyz/home';
 
   const setup = async () => {
